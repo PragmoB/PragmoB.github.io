@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>윈도우 gui 서브시스템의 이해</title>
+  <meta name="description" content="개요">
+  
+  <meta name="author" content="Pragmo">
+  <meta name="copyright" content="&copy; Pragmo 2024">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="개요" />
+  <meta property="og:url" content="https://pragmob.github.io//forensic/2022/12/10/%EC%9C%88%EB%8F%84%EC%9A%B0-gui-%EC%84%9C%EB%B8%8C%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%EC%9D%B4%ED%95%B4.html">
+  <meta property="og:site_name" content="플래그모의 리포지토리" />
+  <meta property="og:title" content="윈도우 gui 서브시스템의 이해" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://pragmob.github.io//assets/logo.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="윈도우 gui 서브시스템의 이해">
+  <meta name="twitter:description" content="개요">
+  <meta name="twitter:image" content="https://pragmob.github.io//assets/logo.png">
+  <meta name="twitter:url" content="https://pragmob.github.io//forensic/2022/12/10/%EC%9C%88%EB%8F%84%EC%9A%B0-gui-%EC%84%9C%EB%B8%8C%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%EC%9D%B4%ED%95%B4.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="https://pragmob.github.io//forensic/2022/12/10/%EC%9C%88%EB%8F%84%EC%9A%B0-gui-%EC%84%9C%EB%B8%8C%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%EC%9D%B4%ED%95%B4.html">
+	<link rel="alternate" type="application/rss+xml" title="플래그모의 리포지토리" href="https://pragmob.github.io//feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+
+  
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/logo.jpg" alt="플래그모의 리포지토리">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">윈도우 gui 서브시스템의 이해</h1>
+      <p class="info">by <strong>Pragmo</strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">December 10, 2022</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/forensic">Forensic</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <h1 id="개요">개요</h1>
+
+<p>요즘에 읽고 있는 포렌식 책에서 윈도우의 gui 사용 흔적과 관련된 내용을 접했다</p>
+
+<p>평소에 <a href="https://www.youtube.com/watch?v=omj21BQouVI">샌즈바이러스</a> 같은거 만들면서 놀고 응용해서 원격 조종 툴도 만들어보고 윈도우 gui는 정말 잘 안다고 자신했는데 책을 읽고 나니 생각보다 모르는 부분이 꽤 있었다는 점을 깨달았다</p>
+
+<p>내용이 꽤 방대하다보니 배운 내용들이 따로 노는 느낌이라 통합적인 이해를 위해 정리해본다</p>
+
+<p><img src="/assets/posts/윈도우 gui 서브시스템의 이해/윈도우GUI.PNG" alt="윈도우GUI" /></p>
+
+<p>윈도우 운영체제의 gui 서브시스템은 그림과 같이 세션-&gt;윈도우 스테이션-&gt;데스크탑-&gt;윈도우(창)로 이어지는 구조로 되어있다</p>
+
+<p>각각 _MM_SESSION_SPACE, tagWINDOWSTATION, tagDESKTOP, tagWND라는 데이터 구조가 커널에 존재한다</p>
+
+<p>특이사항으로 tagWINDOWSTATION과 tagDESKTOP은 실행부 객체 관리자에 의해 할당되며, _POOL_HEADER와 _OBJECT_HEADER를 갖는다</p>
+
+<p>따라서 메모리 덤프에서 풀 태그(직접 확인해보니 [Win ])로 검색할 수 있다</p>
+
+<p>이 글의 모든 정보는 64비트 윈도우7을 기준으로 한다</p>
+
+<p>세션부터 차근차근 짚어가보자</p>
+
+<h1 id="세션">세션</h1>
+
+<p>윈도우 운영체제는 기본적으로 둘 이상의 사용자 로그인을 지원하기 때문에 세션이라는 분리구역을 가지게 된다</p>
+
+<p>일반 가정에서 쓰는 경우는 보통 사용자를 하나만 쓰기 때문에 이러한 사실을 망각하며 살지만 세션이라는 개념을 통해 같은 메모리를 공유하며 사용하는 사용자들을 구분하는 것이 가능해진다</p>
+
+<p>쉽게 예를 들면 a.exe(실행중)는 얘꺼, b.exe(실행중)는 쟤꺼, 윈도우스테이션A는 얘꺼, 윈도우스테이션B는 쟤꺼 라는 시스템인 것이다</p>
+
+<p>정보를 담고 있는 커널 영역의 _MM_SESSION_SPACE 구조체는</p>
+
+<ol>
+  <li>SessionId : 세션 ID값을 가지고 있다</li>
+  <li>ProcessList : 같은 세션에 속한 프로세스 객체(_EPROCESS)의 연결 리스트를 리스트의 head 포인터를 소유해 관리한다</li>
+  <li>ImageList : 세션이 사용하는 시스템 드라이버 정보를 담은 _IMAGE_ENTRY_IN_SESSION 연결 리스트에 대한 head 포인터를 가진다</li>
+</ol>
+
+<p>프로세스의 경우에는 _EPROCESS.SessionProcessLinks를 통해 같은 세션에 속한 _EPROCESS 객체끼리 이중 연결 리스트로 관리된다</p>
+
+<p>전역(global)로 쓰이는 문자열이 있는 아톰 테이블을 가진다고 하는데 _MM_SESSION_SPACE 데이터 구조에는 관련한 멤버가 보이지 않는다</p>
+
+<p>분석이 덜된듯</p>
+
+<p>3번에 관해서는 세션마다 사용하는 시스템 드라이버의 매핑정보가 다른 경우를 대비하기 위함인듯 하다</p>
+
+<p>예를 들면 세션0 에서는 win32k.sys의 base가 0xb0000000였다면 세션1 에서는 0xc0000000에 매핑되는 식인것이다</p>
+
+<p>실제로 win32k.sys는 세션이 만들어 질 때마다 복사본이 만들어져 매핑될 수 있다고 하니 그렇게 해석하는게 맞는것 같다</p>
+
+<p>(관련 정보 : 메모리 포렌식 p519. , <a href="https://stackoverflow.com/questions/6321677/win32k-sys-mapping-address-in-the-session-space">stackoverflow</a>)</p>
+
+<p>_IMAGE_ENTRY_IN_SESSION도 자세히 알아보려 했는데 정보가 너무 없다..</p>
+
+<p>하지만 로딩된 모듈의 주소는 가지고 있는듯 하니 모르는 부분은 그림에서 빨간색 화살표로 정리한다</p>
+
+<p>실제 멤버 이름과 함께 그림으로 표현하면 이렇게 된다</p>
+
+<p><img src="/assets/posts/윈도우 gui 서브시스템의 이해/세션.PNG" alt="세션" /></p>
+
+<p>드라이버로 이어지는 부분을 빨간색 화살표로 표시한건 _IMAGE_ENTRY_IN_SESSION의 구조를 정확히 알 수가 없어서이다</p>
+
+<p>하지만 이어지는건 확실하니 빨간색으로나마 표기했다</p>
+
+<h1 id="윈도우-스테이션">윈도우 스테이션</h1>
+
+<p>다음으로 세션의 하위개념으로 윈도우 스테이션이 있다</p>
+
+<p>여러개의 데스크탑을 하나의 단위로 묶어놓은 개념이라고 보면 될듯하다</p>
+
+<p>데이터 구조체(tagWINDOWSTATION)에서 나타나는 특징들로는</p>
+
+<ol>
+  <li>dwSessionId : 소속한 세션의 세션 ID와 객체(_MM_SESSION_SPACE)의 포인터를 갖는다</li>
+  <li>pwinstaNext : 같은 세션에 속한 윈도우 스테이션 객체끼리는 이중 연결 리스트로 관리된다</li>
+  <li>rpdeskList : 하위개념인 데스크톱 객체(tagDESKTOP)의 연결 리스트를 리스트의 head 포인터를 소유해 관리한다</li>
+  <li>pClipBase : 클립보드 데이터를 해당 객체(tagCLIP) 배열의 포인터를 소유해 관리한다</li>
+  <li>spwndClipViewer : 윈도우 스테이션 하나당 클립보드를 후킹하는 윈도우를 하나 등록할 수 있다</li>
+  <li>pGlobalAtomTable : 밑에서 설명할 아톰 테이블의 포인터를 갖는다</li>
+</ol>
+
+<p>그림으로 표현하면 다음과 같다</p>
+
+<p><img src="/assets/posts/윈도우 gui 서브시스템의 이해/윈도우 스테이션.PNG" alt="윈도우 스테이션" /></p>
+
+<p>여기서 클립보드가 나왔는데, Ctrl+C Ctrl+V 복붙은 지금도 많이 쓰이고 있는 기능이고 영향력이 크므로 정리해보면</p>
+
+<h1 id="클립보드">클립보드</h1>
+
+<p>클립보드 데이터를 하나당 tagCLIP이라는 구조를 갖춰 저장한다</p>
+
+<p>형태는</p>
+
+<ol>
+  <li>fmt : enum 값으로 클립보드 데이터의 형식을 지정하는 멤버가 있고(CF_TEXT, CF_UNICODETEXT, CF_BITMAP, ..)</li>
+  <li>hData : 실질적인 데이터가 있는 tagCLIPDATA 구조체에 대한 포인터를 가지고 있다</li>
+</ol>
+
+<p>윈7 pdb 파일에서 공개된 tagCLIP과 달리 tagCLIPDATA는 정보가 알려진 부분이 거의 없다고는 하는데 데이터는 뽑아낼 수 있는듯 하다</p>
+
+<p>tagCLIPDATA.abData라는 바이트 배열 값을 읽어들여 클립보드에 복사된 값을 확인할 수 있다</p>
+
+<p>그림으로 정리하면 이렇게 된다</p>
+
+<p><img src="/assets/posts/윈도우 gui 서브시스템의 이해/클립보드.PNG" alt="클립보드" /></p>
+
+<h1 id="아톰atom">아톰(Atom)</h1>
+
+<p>상대적으로 중요성이 떨어진다 생각하긴 하지만 정리는 해두겠다</p>
+
+<p>윈도우 gui에서 사용되는 전역(global) 문자열을 아톰이라 한다</p>
+
+<p>_RTL_ATOM_TABLE 이라는 구조의 테이블이 있고, _RTL_ATOM_TABLE_ENTRY 라는 구조의 원소로 구성된다</p>
+
+<p>_RTL_ATOM_TABLE은 실행부 객체 관리자에 의해 할당되며, 풀 태그[AtmT]로 검색이 가능하다</p>
+
+<p>_RTL_ATOM_TABLE의 구조가 좀 특이한데, _RTL_ATOM_TABLE_ENTRY의 <strong>주소</strong>를 배열로 저장한다</p>
+
+<p>자신의 주소가 배열에 들어간 _RTL_ATOM_TABLE_ENTRY 원소는 다음 원소를 단일 연결 리스트 형식으로 연결한다</p>
+
+<p>따라서 2차원 배열이라고 볼 수 있다</p>
+
+<p>이 연결 리스트 하나를 버킷이라고 한다</p>
+
+<p>이 배열에 들어가는 원소인 _RTL_ATOM_TABLE_ENTRY 구조체의 형태를 정리해보면</p>
+
+<ol>
+  <li>Name : 특정한 문자열 값을 저장한다</li>
+  <li>Atom : ID값이 있다</li>
+  <li>ReferenceCount : 같은 버킷에 있는 원소의 개수를 저장한다</li>
+</ol>
+
+<p>그림으로 정리하면 이렇게 된다</p>
+
+<p><img src="/assets/posts/윈도우 gui 서브시스템의 이해/아톰.PNG" alt="아톰" /></p>
+
+<p>관련된 api로 AddAtom, FindAtom등이 있다</p>
+
+<p>어디에 쓰일까 의문이 들 수 있겠지만 생각보다 활용이 되는 것 같다</p>
+
+<p>#1번째로 윈도우 클래스를 등록할 때 클래스 이름을 아톰에 등록한다</p>
+
+<p>예를 들어</p>
+
+<pre><code class="language-C">WNDCLASS WndClass;
+WndClass.cbClsExtra = 0;
+WndClass.cbWndExtra = 0;
+WndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+WndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+WndClass.hInstance = hInstance;
+WndClass.lpfnWndProc = WndProc;
+WndClass.lpszClassName = TEXT("myclass");
+WndClass.lpszMenuName = NULL;
+WndClass.style = CS_HREDRAW | CS_VREDRAW;
+RegisterClassEx(&amp;WndClass);
+</code></pre>
+
+<p>와 같은 프로그램을 실행했다고 해보자</p>
+
+<p>직후 메모리 포렌식 툴로 아톰 테이블을 관찰해보면</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Volatility Foundation Volatility Framework 2.6.1  
+ Offset(P) AtomOfs(V)       Atom Refs   Pinned Name  
+---------- ---------- ---------- ------ ------ ----  
+ 0xbd22800 0x8780fef0     0xc003      1      1 myclass
+</code></pre></div></div>
+
+<p>이런 결과가 나오게 된다</p>
+
+<p>#2번째로 윈도우 메시지를 등록할 때 아톰을 사용한다</p>
+
+<p>책을 읽고 공부하면서 처음 알았는데, registerwindowmessage라는 api로 메시지를 등록해 사용하는 방법이 있었다</p>
+
+<p>찾아본 내용들을 정리해보면</p>
+
+<p><mark>송신측</mark></p>
+
+<p>stdafx.h등에서</p>
+
+<pre><code class="language-C">static const UINT MsgRegi_1 = RegisterWindowMessage(_T("MsgRegi_MyProgram"));
+SendMessage(HWND_BROADCAST, MsgRegi_1,wpara,lpara); //메시지전송
+</code></pre>
+
+<p><mark>수신측</mark></p>
+
+<p>stdafx.h등에서</p>
+
+<pre><code class="language-C">static const UINT MsgRegi_1 = RegisterWindowMessage(_T("MsgRegi_MyProgram"));
+</code></pre>
+
+<p>BEGIN_MESSAGE_MAP의 끝에,(END_MESSAGE_MAP 앞에)</p>
+
+<pre><code class="language-C">ON_REGISTERED_MESSAGE(MsgRegi_1,OnMsgRegi_1)
+</code></pre>
+
+<p>메시지핸들러 구현.</p>
+
+<p>.h 에서 선언.</p>
+
+<pre><code class="language-C">afx_msg LRESULT OnMsgRegi_1(WPARAM wParam,LPARAM lParam);
+</code></pre>
+
+<p>.cpp 에서 정의.</p>
+
+<pre><code class="language-C">LRESULT CMyclass::OnMsgRegi_1(WPARAM wpara,LPARAM lpara)
+{
+ // 여기서 메시지 수신시 처리할 내용 코딩.
+ return 0L;
+}
+</code></pre>
+
+<p><a href="https://igotit.tistory.com/entry/%EB%8B%A4%EB%A5%B8-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%A8%EA%B3%BC-%EB%A9%94%EC%8B%9C%EC%A7%80-%EC%86%A1%EC%88%98%EC%8B%A0-RegisterWindowMessage">출처</a></p>
+
+<p>그냥 송수신 프로그램끼리 #define으로만 약속하지 않고 아톰에 등록까지 하는 체계가 마련된 이유는 HWND_BROADCAST로 전역적인 메시지를 발생시킬 때 자신들이 개발한 프로그램 이외에서도 메시지를 이용할 수 있도록 한 이유가 큰것같다</p>
+
+<p>실제 포렌식 툴로 아톰 테이블을 관찰해보면</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Volatility Foundation Volatility Framework 2.6.1  
+ Offset(P) AtomOfs(V)       Atom Refs   Pinned Name  
+---------- ---------- ---------- ------ ------ ----  
+0x2380dda8 0x98e86dc8     0xc2a4      1      0 WM_SHOWSTAGE
+0x2380dda8 0x9606d8a0     0xc1f5      4      0 WM_ATLGETCONTROL
+0x2380dda8 0x95746508     0xc16d      1      0 WM_MSO_RPC_REMERGE
+0x2380dda8 0x95746b88     0xc16f      2      0 WM_QUERYPRINTWINDOW
+[중략]
+</code></pre></div></div>
+
+<p>정의된 메시지들을 확인할 수 있다</p>
+
+<h1 id="데스크탑">데스크탑</h1>
+
+<p>윈도우 스테이션의 하위 개념으로 데스크탑이 있다</p>
+
+<p>데이터 구조인 tagDESKTOP의 형태를 정리해보면</p>
+
+<ol>
+  <li>dwSessionId : 소속된 세션의 ID를 저장한다</li>
+  <li>pDeskInfo : tagDESKTOPINFO에 대한 포인터를 소유한다</li>
+  <li>rpdeskNext : 같은 윈도우 스테이션에 소속된 데스크탑 객체들 끼리 연결 리스트를 형성한다</li>
+  <li>rpwinstaParent : 소속된 윈도우 스테이션 객체에 대한 포인터를 소유한다</li>
+  <li>spwndForeground : 현재 선택된 윈도우의 객체에 대한 포인터를 가진다</li>
+  <li>spwndDialogSys, spwndTooltip , … : 각종 인터페이스를 구성하는 윈도우의 객체에 대한 포인터를 가진다</li>
+</ol>
+
+<p>tagDESKTOPINFO는</p>
+
+<ol>
+  <li>aphkStart : 후킹 정보(tagHOOK)로 이어지는 포인터를 소유한다</li>
+</ol>
+
+<p>그림으로 정리하면 이렇게 된다</p>
+
+<p><img src="/assets/posts/윈도우 gui 서브시스템의 이해/데스크탑.PNG" alt="데스크탑" /></p>
+
+<p>누에 보이지 않는 세션, 윈도우 스테이션과는 달리 데스크탑부터는 시각적으로 보여지게 되는데</p>
+
+<p>예를 들면 윈도우의 로그인 데스크탑이 있다</p>
+
+<p><img src="/assets/posts/윈도우 gui 서브시스템의 이해/winlogon.jpg" alt="winlogon" /></p>
+
+<p>모두들 다 알다시피 로그인 화면에서 비밀번호를 올바르게 입력하지 않으면 원래 화면으로 넘어갈 수 없는데</p>
+
+<p>그 이유는 로그인 데스크탑과 기본 데스크탑이 분리되어 있기 때문이다</p>
+
+<p>로그인 데스크탑의 경우 WinSta0/Winlogon이라는 이름으로 되어있고 기본 데스크탑의 경우 WinSta0/Default라는 이름이다</p>
+
+<p>초중고 컴퓨터실에 깔려있는 클래스M 제품의 화면잠금 기능또한 화면잠금용 데스크탑을 하나 만들어 SwitchDesktop을 호출하는 식으로 동작한다</p>
+
+<p>SetWindowsHookEx api를 이용하는 키로거에서 로그인 화면의 비밀번호 입력 값을 가로채지 못하는 이유 또한 데스크탑이 분리되어 있기 때문이다</p>
+
+<p>윈도우에서 지원하는 메시지 후킹은 데스크탑 범위를 넘을 수 없으므로 관련해서 좀 더 자세히 정리해보자</p>
+
+<h1 id="메시지-후킹">메시지 후킹</h1>
+
+<p>윈도우에 연결된 스레드의 메시지 큐로 전송되는 메시지(WM_KEYDOWN, WM_MOUSEMOVE 등)를 중간에 가로챌 수 있다</p>
+
+<p>키로거 만들기라고 검색하면 흔히 보이는 SetWindowsHookEx가 윈도우에서 공식으로 지원하는 api인데 이걸 쓰게 되면 데스크탑 범위를 넘는 후킹은 할 수 없다</p>
+
+<p>왜인지는 자세히 모르겠지만 tagHOOK이 데스크탑 단에서 관리가 되기도 하고 해서 그런듯</p>
+
+<p>형태를 자세히 보면</p>
+
+<ol>
+  <li>iHook : 후킹 종류(WH_로 시작하는 WH_KEYBOARD WH_MOUSE 등 상수값)를 나타내는 멤버를 가지고 있다</li>
+  <li>phkNext : 같은 종류의 hook끼리 연결 리스트(hook chain)를 형성한다. CallNextHookEx에서 다음 순서의 후킹 프로시저를 찾을때 사용한다</li>
+  <li>offPfn : DLL 내 후킹 프로시저의 RVA값을 가진다</li>
+  <li>ihmod : 아톰에 저장되어있는 전체 DLL 경로 문자열의 ID값을 가진다. 이 경우 아톰 테이블은 윈도우 스테이션도 세션도 아닌 win32k.sys!aatomSysLoaded에 있다</li>
+  <li>ptiHooked : 후킹 대상 스레드의 정보(tagTHREADINFO)에 대한 포인터를 가진다</li>
+  <li>rpdesk : 후킹 대상 스레드가 속해있는 데스크탑(tagDESKTOP) 에 대한 포인터를 가진다</li>
+</ol>
+
+<p>그림으로 정리하면 이렇게 된다</p>
+
+<p><img src="/assets/posts/윈도우 gui 서브시스템의 이해/메시지 후킹.PNG" alt="메시지 후킹" /></p>
+
+<p>이 데이터를 분석해 후킹 상황을 파악하는 것이 가능하다</p>
+
+<h1 id="윈도우">윈도우</h1>
+
+<p>데스크탑보다 더 작은 단위로 윈도우가 있다</p>
+
+<p>흔히 아는 그 ‘창’ 맞다</p>
+
+<p>데이터 구조인 tagWND를 보게 되면</p>
+
+<ol>
+  <li>head : 소속된 쓰레드의 정보를 포함한 _THRDESKHEAD를 포인터를 소유해 가진다</li>
+  <li>lpfnWndProc : 윈도우 메시지를 처리할 프로시저의 주소를 가진다</li>
+  <li>pcls : 윈도우 클래스 정보(tagCLS)에 대한 포인터를 가진다</li>
+  <li>strName : 타이틀을 가진다</li>
+  <li>spwndNext, spwndPrev : 같은 데스크탑에 속한 객체들끼리 이중 연결 리스트를 형성한다</li>
+  <li>그 외 창크기, 스타일 플래그 등 꾸미기 정보를 가진다</li>
+</ol>
+
+<p>그림으로 정리하면 이렇게 된다</p>
+
+<p><img src="/assets/posts/윈도우 gui 서브시스템의 이해/윈도우.PNG" alt="윈도우" /></p>
+
+<h1 id="유저-핸들-테이블">유저 핸들 테이블</h1>
+
+<p>라이브에서 실행되는 프로세스가 _EPROCESS에서 연결되는 _HANDLE_TABLE을 통해 실행부 객체에 대한 조작 권한(핸들)을 얻듯이</p>
+
+<p>gui 서브시스템에도 비슷한 것이 있다</p>
+
+<p>유저 핸들 테이블이 그것인데 공개된 문서가 별로 없다보니 앞서 말한 gui 객체들과 어떤 연관점이 있는지는 모른다</p>
+
+<p>다만 포렌식에서 참고자료로 쓸 수 있는 수준은 되므로 정리를 해본다</p>
+
+<p>유저 핸들을 알아보기 앞서 유저 핸들의 유형을 짚고 넘어가면</p>
+
+<p>tagHANDLETYPEINFO라는 구조의 데이터가 있어 유저 핸들의 종류에 대한 정보가 마련이 되어있다</p>
+
+<p>형태를 정리해보면</p>
+
+<ol>
+  <li>dwAllocTag : 실행부 객체에서의 풀 태그와 비슷한 포지션에 있는 4바이트 크기 문자열을 가진다</li>
+  <li>bObjectCreateFlags : 플래그를 통해 여러가지 정보들을 나타낸다
+    <ol>
+      <li>어떤 단위에 소속하는지 정보를 알려준다 : 프로세스 or 스레드 or 없음</li>
+      <li>공유되는지 여부</li>
+      <li>그 외 더 많이 있음</li>
+    </ol>
+  </li>
+</ol>
+
+<p>win32k.sys에서 배열로 존재하며 win32k.sys!_gahti 심볼을 통해 찾을 수 있는 정보이다</p>
+
+<p>유저 핸들 엔트리는 핸들의 종류를 해당되는 tagHANDLETYPEINFO의 win32k.sys!_gahti 배열에서의 인덱스 값을 저장해 표현하기 때문에</p>
+
+<p>tagHANDLETYPEINFO는 실행부 객체에서의 _OBJECT_TYPE과 비슷한 역할을 한다고 볼 수 있을 것같다</p>
+
+<p>실질적인 핸들 정보를 담고 있는 구조는 tagSHAREDINFO와 _HANDLEENTRY이다</p>
+
+<p>tagSHAREDINFO는 _HANDLEENTRY의 배열을 관리하는 역할을 하고</p>
+
+<p>_HANDLEENTRY안에 정보가 들어있다</p>
+
+<p>tagSHAREDINFO부터 정리해보면</p>
+
+<ol>
+  <li>aheList : _HANDLEENTRY의 배열을 가리키는 포인터를 가진다</li>
+  <li>HeEntrySize : _HANDLEENTRY의 사이즈</li>
+</ol>
+
+<p>없어보이긴 하지만 이게 끝이다</p>
+
+<p>사실 psi, ulSharedDelta 두개가 더 있긴 한데 이해가 안돼서 이건 패스</p>
+
+<p>_HANDLEENTRY도 정리해보면</p>
+
+<ol>
+  <li>phead : 헤더에 대한 포인터를 가진다. 스레드 소속일 경우 _THRDESKHEAD가 헤더이고 프로세스 소속일 경우 _PROCDESKHEAD가 헤더이다. 없을 경우는 _HEAD</li>
+  <li>pOwner : 핸들을 소유하는 객체의 정보에 대한 포인터를 가진다. 스레드 소속일 경우(스레드가 소유할 경우) 해당 스레드의 정보를 담은 tagTHREADINFO를 가리키고 프로세스 소속일 경우 tagPROCESSINFO 없을 경우는 따로 마련된게 없다</li>
+  <li>bType : 핸들의 종류(TYPE_WINDOW, TYPE_MENU, ..)를 표현하기 위해 tagHANDLETYPEINFO의 인덱스 값을 가진다. tagHANDLETYPEINFO에 자세한 속성들이 정의되어있다</li>
+</ol>
+
+<p><a href="https://reactos.org/wiki/Techwiki:Win32k/HANDLEENTRY">보조자료</a></p>
+
+<p>그림으로 정리하면 이렇게 된다</p>
+
+<p><img src="/assets/posts/윈도우 gui 서브시스템의 이해/유저 핸들 테이블.PNG" alt="유저 핸들 테이블" /></p>
+
+<h1 id="이벤트-후킹">이벤트 후킹</h1>
+
+<p>윈도우의 gui 애플리케이션들은 특정 행위를 할 때 이벤트를 발생시킨다</p>
+
+<p>포렌식 책에 나와있는 예시를 들면</p>
+
+<p>explorer.exe는 소리가 연주될 때 EVENT_SYSTEM_SOUND</p>
+
+<p>메뉴 바에 있는 클라이언트가 선택될 때 EVENT_SYSTEM_MENUSTART를 발생시킨다</p>
+
+<p>윈도우에서는 SetWinEventHook api 호출을 통해 이러한 이벤트들에 대한 후킹 콜백을 등록할 수 있는데</p>
+
+<p>관련된 데이터 구조는 tagEVENTHOOK으로 형태는 다음과 같다</p>
+
+<ol>
+  <li>phkNext : 등록된 이벤트 훅 객체들끼리 연결 리스트(hook chain)를 형성한다. 훅 체인에서 다음 순서의 후킹 프로시저를 찾을 때 활용된다</li>
+  <li>eventMin : 후킹할 이벤트의 최소값을 정한다</li>
+  <li>eventMax : 후킹할 이벤트의 최댓값을 정한다</li>
+  <li>idProcess : 후킹 대상 프로세스의 ID를 갖는다. 데스크톱 내 모든 프로세스에 전역적으로 적용될 경우는 0이다</li>
+  <li>idThread : 후킹 대상 스레드의 ID를 갖는다. 데스크톱 내 모든 스레드에 전역적으로 적용될 경우는 0이다</li>
+  <li>offPfn : DLL내에서 후킹 프로시저의 RVA값을 갖는다</li>
+  <li>ihmod : 후킹을 위해 로딩된 DLL의 전체 경로를 갖는다. 형식은 아톰이며 실제 데이터는 win32k.sys!aatomSysLoaded에 있다. DLL이 없는 경우 -1이다</li>
+</ol>
+
+<p>그림으로 정리하면 다음과 같다</p>
+
+<p><img src="/assets/posts/윈도우 gui 서브시스템의 이해/이벤트 후킹.PNG" alt="이벤트 후킹" /></p>
+
+<p>eventMin, eventMax에 관해서는 이해가 안갔는데 윈도우 이벤트를 후킹할 때는 WH_KEYBOARD WH_MOUSE마냥 이벤트를 하나만 지정하는 방식이 아니라 해당 enum값 기준으로 [eventMin &lt;= x &lt;= eventMax]에 해당하는 이벤트 x를 싹다 후킹을 설정할 수가 있는 것이더라</p>
+
+<p>즉 모든 이벤트에 대해 훅을 설치한 경우는 eventMin = EVENT_MIN, eventMax = EVENT_MAX가 된다</p>
+
+<p>이것 역시 공식으로 문서화된 정보는 없다보니 밝혀진 부분은 여기까지다</p>
+
+<p>이거 리버싱 해내신 연구원님들 진짜 대단..</p>
+
+<h1 id="정리">정리</h1>
+
+<p>지금까지의 내용을 통합적으로 정리해보면 아래 그림 하나로 표현이 된다</p>
+
+<p><img src="/assets/posts/윈도우 gui 서브시스템의 이해/큰그림.PNG" alt="큰그림" /></p>
+
+<p>다시 한번 언급을 하지만 64비트 윈도우7을 기준으로 한 정보이다</p>
+
+<p>향후 업데이트에 따라 변경될 여지가 많다</p>
+
+<p>정보도 잘 없는 분야 파느라 힘들었다</p>
+
+<p>영어로 읽는 습관은 조금씩이라도 꾸준히 들여놔야겠다</p>
+
+<p>정리끝~</p>
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+      <a href="//twitter.com/share?text=%EC%9C%88%EB%8F%84%EC%9A%B0+gui+%EC%84%9C%EB%B8%8C%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98+%EC%9D%B4%ED%95%B4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2022%2F12%2F10%2F%25EC%259C%2588%25EB%258F%2584%25EC%259A%25B0-gui-%25EC%2584%259C%25EB%25B8%258C%25EC%258B%259C%25EC%258A%25A4%25ED%2585%259C%25EC%259D%2598-%25EC%259D%25B4%25ED%2595%25B4.html&via="
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=255');return false;">
+        <i class="fa fa-twitter-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+      <a href="//www.facebook.com/sharer.php?t=%EC%9C%88%EB%8F%84%EC%9A%B0+gui+%EC%84%9C%EB%B8%8C%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98+%EC%9D%B4%ED%95%B4&u=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2022%2F12%2F10%2F%25EC%259C%2588%25EB%258F%2584%25EC%259A%25B0-gui-%25EC%2584%259C%25EB%25B8%258C%25EC%258B%259C%25EC%258A%25A4%25ED%2585%259C%25EC%259D%2598-%25EC%259D%25B4%25ED%2595%25B4.html"
+        onclick="window.open(this.href, 'facebook-share', 'width=550,height=255');return false;">
+        <i class="fa fa-facebook-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+      <a href="//www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2022%2F12%2F10%2F%25EC%259C%2588%25EB%258F%2584%25EC%259A%25B0-gui-%25EC%2584%259C%25EB%25B8%258C%25EC%258B%259C%25EC%258A%25A4%25ED%2585%259C%25EC%259D%2598-%25EC%259D%25B4%25ED%2595%25B4.html"
+        onclick="window.open(this.href, 'linkedin-share', 'width=550,height=255');return false;">
+        <i class="fa fa-linkedin-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=%EC%9C%88%EB%8F%84%EC%9A%B0+gui+%EC%84%9C%EB%B8%8C%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98+%EC%9D%B4%ED%95%B4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2022%2F12%2F10%2F%25EC%259C%2588%25EB%258F%2584%25EC%259A%25B0-gui-%25EC%2584%259C%25EB%25B8%258C%25EC%258B%259C%25EC%258A%25A4%25ED%2585%259C%25EC%259D%2598-%25EC%259D%25B4%25ED%2595%25B4.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+      <a href="//www.pinterest.com/pin/create/button/?description=%EC%9C%88%EB%8F%84%EC%9A%B0+gui+%EC%84%9C%EB%B8%8C%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98+%EC%9D%B4%ED%95%B4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2022%2F12%2F10%2F%25EC%259C%2588%25EB%258F%2584%25EC%259A%25B0-gui-%25EC%2584%259C%25EB%25B8%258C%25EC%258B%259C%25EC%258A%25A4%25ED%2585%259C%25EC%259D%2598-%25EC%259D%25B4%25ED%2595%25B4.html&media=https://pragmob.github.io//assets/logo.jpg"
+        onclick="window.open(this.href, 'pinterest-share', 'width=550,height=255');return false;">
+        <i class="fa fa-pinterest-square fa-lg"></i>
+      </a>
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+      <a href="//www.reddit.com/submit" onclick="window.location = '//www.reddit.com/submit?url=' + encodeURIComponent('https://pragmob.github.io//forensic/2022/12/10/%EC%9C%88%EB%8F%84%EC%9A%B0-gui-%EC%84%9C%EB%B8%8C%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%EC%9D%B4%ED%95%B4.html') + '&title=윈도우 gui 서브시스템의 이해'; return false">
+        <i class="fa fa-reddit-square fa-lg"></i>
+      </a>
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+	<section class="post-navigation">
+		<span class="prev-post">
+			
+				<a href="/cryptography/2022/10/18/RSA-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%99%84%EB%B2%BD-%EC%9D%B4%ED%95%B4.html">
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i>
+					</span>
+					<span class="page-number">RSA 알고리즘 완벽 이해</span>
+				</a>
+			
+		</span>
+		<span class="next-post">
+			
+				<a href="/algebra/2022/12/31/%EC%88%98%EC%B2%B4%EA%B3%84%EC%9D%98-%ED%99%95%EC%9E%A5-%EA%B3%BC%EC%A0%95%EC%97%90-%EA%B4%80%ED%95%9C-%EB%8C%80%EC%88%98%EC%A0%81-%EC%9D%B4%ED%95%B4.html">
+					<span class="page-number">수체계의 확장 과정에 관한 대수적 이해</span>
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i>
+					</span>
+				</a>
+			
+		</span>
+	</section>
+
+
+
+
+<!-- github comments -->
+<section class="github-comments">
+  <script src="https://utteranc.es/client.js"
+    repo="PragmoB/blog-comments"
+    issue-term="pathname"
+    theme="github-light"
+    crossorigin="anonymous"
+    async>
+  </script>
+</section>
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">플래그모의 리포지토리</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:peullaegeumo@gmail.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">peullaegeumo@gmail.com</span>
+          </a>
+        </li>
+
+        
+          
+        
+          
+        
+          
+          <li>
+            <a href="https://github.com/PragmoB" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">PragmoB</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text">공부하고 경험했던 내용들을 정리해서 올리고 있습니다. 어서오세요
+</p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>

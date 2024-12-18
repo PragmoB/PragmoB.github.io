@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>그림으로 쉽게 보는 tcache stashing unlink attack</title>
+  <meta name="description" content="소개">
+  
+  <meta name="author" content="Pragmo">
+  <meta name="copyright" content="&copy; Pragmo 2024">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="소개" />
+  <meta property="og:url" content="https://pragmob.github.io//system_hacking/2022/10/03/%EA%B7%B8%EB%A6%BC%EC%9C%BC%EB%A1%9C-%EC%89%BD%EA%B2%8C-%EB%B3%B4%EB%8A%94-tcache-stashing-unlink-attack.html">
+  <meta property="og:site_name" content="플래그모의 리포지토리" />
+  <meta property="og:title" content="그림으로 쉽게 보는 tcache stashing unlink attack" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://pragmob.github.io//assets/logo.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="그림으로 쉽게 보는 tcache stashing unlink attack">
+  <meta name="twitter:description" content="소개">
+  <meta name="twitter:image" content="https://pragmob.github.io//assets/logo.png">
+  <meta name="twitter:url" content="https://pragmob.github.io//system_hacking/2022/10/03/%EA%B7%B8%EB%A6%BC%EC%9C%BC%EB%A1%9C-%EC%89%BD%EA%B2%8C-%EB%B3%B4%EB%8A%94-tcache-stashing-unlink-attack.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="https://pragmob.github.io//system_hacking/2022/10/03/%EA%B7%B8%EB%A6%BC%EC%9C%BC%EB%A1%9C-%EC%89%BD%EA%B2%8C-%EB%B3%B4%EB%8A%94-tcache-stashing-unlink-attack.html">
+	<link rel="alternate" type="application/rss+xml" title="플래그모의 리포지토리" href="https://pragmob.github.io//feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+
+  
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/logo.jpg" alt="플래그모의 리포지토리">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">그림으로 쉽게 보는 tcache stashing unlink attack</h1>
+      <p class="info">by <strong>Pragmo</strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">October 3, 2022</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/system_hacking">System_hacking</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <h1 id="소개">소개</h1>
+
+<p>고3 진로 시간에 발표한 내용.</p>
+
+<p>면접을 위해 복습하려고 찾아보니 잘 정리된 곳이 없어서 직접 정리해보려고 한다</p>
+
+<p>여기저기 돌아다니며 공부하다보니 글로 설명하기 보다는 그림으로 보여주는게 더 이해가 쉬움을 깨달았다</p>
+
+<p>취약점 이해에 앞서 glibc의 힙메모리 관리체계가 어떻게 돌아가는지를 이해해야 한다</p>
+
+<p><a href="/system_hacking/2022/09/29/glibc-힙메모리-관리체계-정리.html">전에 썼던 블로그 글</a> 참고</p>
+
+<h1 id="원리">원리</h1>
+
+<p>보통의 경우, bin에서 Chunk를 할당할 때는 해당 Chunk가 유효한지(연결 리스트가 훼손되지 않았는지) 검증을 하게 된다</p>
+
+<p>예를 들어 다음과 같이 조작된 상태</p>
+
+<p><img src="/assets/posts/그림으로 쉽게 보는 tcache stashing unlink attack/Chunk검증.png" alt="Chunk검증" /></p>
+
+<p>에서 fake를 할당 받고자 하는 경우를 생각해보자</p>
+
+<p>아무런 검증절차가 없다면 단순하게 malloc을 2번 하는 것만으로 간단하게 할당받을 수 있을 것이다</p>
+
+<p>하지만 할당 전에 Chunk0-&gt;bk-&gt;fd == Chunk0인지 한번이라도 확인을 해준다면?? fake chunk의 할당을 조금이나마 막을 수 있게 된다</p>
+
+<p>이러한 이유로 검증을 하는게 일반적인데,</p>
+
+<p>tcache bin으로 옮기기 위해 unlink할때는 <strong>검증을 하지 않더라</strong></p>
+
+<p>glibc 2.27의 malloc.c 소스코드를 통해 좀 더 자세히 보면</p>
+
+<pre><code class="language-C">if (in_smallbin_range (nb))
+{
+	idx = smallbin_index (nb);
+	bin = bin_at (av, idx);
+
+	if ((victim = last (bin)) != bin)
+	{
+        	bck = victim-&gt;bk;
+	  	if (__glibc_unlikely (bck-&gt;fd != victim))
+	    		malloc_printerr ("malloc(): smallbin double linked list corrupted");
+    		set_inuse_bit_at_offset (victim, nb);
+        	bin-&gt;bk = bck;
+        	bck-&gt;fd = bin;
+
+        	if (av != &amp;main_arena)
+		{
+			set_non_main_arena (victim);
+		}
+        	check_malloced_chunk (av, victim, nb);
+#if USE_TCACHE
+	  	size_t tc_idx = csize2tidx (nb);
+	  	if (tcache &amp;&amp; tc_idx &lt; mp_.tcache_bins)
+	   	{
+			mchunkptr tc_victim;
+
+			while (tcache-&gt;counts[tc_idx] &lt; mp_.tcache_count
+				&amp;&amp; (tc_victim = last (bin)) != bin)
+			{
+				if (tc_victim != 0)
+				{
+					bck = tc_victim-&gt;bk;
+					set_inuse_bit_at_offset (tc_victim, nb);
+					if (av != &amp;main_arena)
+					set_non_main_arena (tc_victim);
+					bin-&gt;bk = bck;
+					bck-&gt;fd = bin;
+
+					tcache_put (tc_victim, tc_idx);
+				}
+			}
+	    	}
+#endif
+        	void *p = chunk2mem (victim);
+        	alloc_perturb (p, bytes);
+        	return p;
+    	}
+}
+</code></pre>
+
+<p>할당되는 Chunk(victim)에 관해선 victim-&gt;bk-&gt;fd == victim인지 검증을 하지만(line 8 ~ 10)</p>
+
+<p>tcache로 옮기는 부분(USE_TCACHE)은 검증과정이 없음을 알 수 있다</p>
+
+<p>명백한 보안 취약점이다</p>
+
+<p>이를 이용해 fake를 tcache bin으로 옮긴다는게 공격의 핵심 원리이다</p>
+
+<p>옮기기까지 됐으면 꺼내는건 쉽기 때문에 성공!</p>
+
+<h1 id="example">Example</h1>
+
+<p>말로만 하면 어려우니 그림으로 보자</p>
+
+<p>아래는 공격 예시이다</p>
+
+<p><img src="/assets/posts/그림으로 쉽게 보는 tcache stashing unlink attack/과정1.png" alt="과정1" />
+tcache bin에 chunk가 5개, small bin에 같은 크기의 chunk가 2개씩 연결 되어있다</p>
+
+<p><img src="/assets/posts/그림으로 쉽게 보는 tcache stashing unlink attack/과정2.png" alt="과정2" />
+chunk6의 bk포인터를 fake chunk주소로 조작한다</p>
+
+<p><img src="/assets/posts/그림으로 쉽게 보는 tcache stashing unlink attack/과정3.png" alt="과정3" />
+액세스 위반으로 터지는걸 막기 위해 만들어진 fake chunk의 bk포인터가 메모리 주소 아무데나로 가리킨다. 여기서 calloc이라는 api가 나오는데 얘는 tcache bin을 안쓰고 할당을 수행한다고 한다</p>
+
+<p><img src="/assets/posts/그림으로 쉽게 보는 tcache stashing unlink attack/과정4.png" alt="과정4" />
+calloc으로 small bin에 있는 chunk5를 할당받는다. tcache bin이 2자리 비어있으므로 chunk6과 fake chunk가 tcache bin에 들어간다</p>
+
+<p>malloc으로 tcache bin에서 메모리를 할당받으면 fake chunk에 값을 마음대로 덮어쓸 수 있다!</p>
+
+<h1 id="여담">여담</h1>
+
+<p>이거 보다가 House of Lore도 같이 엮여서 나오길래 찾아봤는데,</p>
+
+<p>tcache로 우회하면 tcache stashing unlink attack이고</p>
+
+<p>tcache없이 정면 돌파 하게되면 House of Lore라고 부르더라</p>
+
+<p>둘이 구분없이 말하는 곳이 많아서 처음엔 조금 헷갈렸었음</p>
+
+<h1 id="참고문헌">참고문헌</h1>
+
+<p><a href="https://github.com/shellphish/how2heap/blob/master/glibc_2.35/tcache_stashing_unlink_attack.c">PoC코드</a></p>
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+      <a href="//twitter.com/share?text=%EA%B7%B8%EB%A6%BC%EC%9C%BC%EB%A1%9C+%EC%89%BD%EA%B2%8C+%EB%B3%B4%EB%8A%94+tcache+stashing+unlink+attack&url=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2022%2F10%2F03%2F%25EA%25B7%25B8%25EB%25A6%25BC%25EC%259C%25BC%25EB%25A1%259C-%25EC%2589%25BD%25EA%25B2%258C-%25EB%25B3%25B4%25EB%258A%2594-tcache-stashing-unlink-attack.html&via="
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=255');return false;">
+        <i class="fa fa-twitter-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+      <a href="//www.facebook.com/sharer.php?t=%EA%B7%B8%EB%A6%BC%EC%9C%BC%EB%A1%9C+%EC%89%BD%EA%B2%8C+%EB%B3%B4%EB%8A%94+tcache+stashing+unlink+attack&u=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2022%2F10%2F03%2F%25EA%25B7%25B8%25EB%25A6%25BC%25EC%259C%25BC%25EB%25A1%259C-%25EC%2589%25BD%25EA%25B2%258C-%25EB%25B3%25B4%25EB%258A%2594-tcache-stashing-unlink-attack.html"
+        onclick="window.open(this.href, 'facebook-share', 'width=550,height=255');return false;">
+        <i class="fa fa-facebook-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+      <a href="//www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2022%2F10%2F03%2F%25EA%25B7%25B8%25EB%25A6%25BC%25EC%259C%25BC%25EB%25A1%259C-%25EC%2589%25BD%25EA%25B2%258C-%25EB%25B3%25B4%25EB%258A%2594-tcache-stashing-unlink-attack.html"
+        onclick="window.open(this.href, 'linkedin-share', 'width=550,height=255');return false;">
+        <i class="fa fa-linkedin-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=%EA%B7%B8%EB%A6%BC%EC%9C%BC%EB%A1%9C+%EC%89%BD%EA%B2%8C+%EB%B3%B4%EB%8A%94+tcache+stashing+unlink+attack&url=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2022%2F10%2F03%2F%25EA%25B7%25B8%25EB%25A6%25BC%25EC%259C%25BC%25EB%25A1%259C-%25EC%2589%25BD%25EA%25B2%258C-%25EB%25B3%25B4%25EB%258A%2594-tcache-stashing-unlink-attack.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+      <a href="//www.pinterest.com/pin/create/button/?description=%EA%B7%B8%EB%A6%BC%EC%9C%BC%EB%A1%9C+%EC%89%BD%EA%B2%8C+%EB%B3%B4%EB%8A%94+tcache+stashing+unlink+attack&url=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2022%2F10%2F03%2F%25EA%25B7%25B8%25EB%25A6%25BC%25EC%259C%25BC%25EB%25A1%259C-%25EC%2589%25BD%25EA%25B2%258C-%25EB%25B3%25B4%25EB%258A%2594-tcache-stashing-unlink-attack.html&media=https://pragmob.github.io//assets/logo.jpg"
+        onclick="window.open(this.href, 'pinterest-share', 'width=550,height=255');return false;">
+        <i class="fa fa-pinterest-square fa-lg"></i>
+      </a>
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+      <a href="//www.reddit.com/submit" onclick="window.location = '//www.reddit.com/submit?url=' + encodeURIComponent('https://pragmob.github.io//system_hacking/2022/10/03/%EA%B7%B8%EB%A6%BC%EC%9C%BC%EB%A1%9C-%EC%89%BD%EA%B2%8C-%EB%B3%B4%EB%8A%94-tcache-stashing-unlink-attack.html') + '&title=그림으로 쉽게 보는 tcache stashing unlink attack'; return false">
+        <i class="fa fa-reddit-square fa-lg"></i>
+      </a>
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+	<section class="post-navigation">
+		<span class="prev-post">
+			
+				<a href="/system_hacking/2022/09/29/glibc-%ED%9E%99%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC%EC%B2%B4%EA%B3%84-%EC%A0%95%EB%A6%AC.html">
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i>
+					</span>
+					<span class="page-number">glibc 힙메모리 관리체계 정리</span>
+				</a>
+			
+		</span>
+		<span class="next-post">
+			
+				<a href="/cryptography/2022/10/18/RSA-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%99%84%EB%B2%BD-%EC%9D%B4%ED%95%B4.html">
+					<span class="page-number">RSA 알고리즘 완벽 이해</span>
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i>
+					</span>
+				</a>
+			
+		</span>
+	</section>
+
+
+
+
+<!-- github comments -->
+<section class="github-comments">
+  <script src="https://utteranc.es/client.js"
+    repo="PragmoB/blog-comments"
+    issue-term="pathname"
+    theme="github-light"
+    crossorigin="anonymous"
+    async>
+  </script>
+</section>
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">플래그모의 리포지토리</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:peullaegeumo@gmail.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">peullaegeumo@gmail.com</span>
+          </a>
+        </li>
+
+        
+          
+        
+          
+        
+          
+          <li>
+            <a href="https://github.com/PragmoB" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">PragmoB</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text">공부하고 경험했던 내용들을 정리해서 올리고 있습니다. 어서오세요
+</p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>

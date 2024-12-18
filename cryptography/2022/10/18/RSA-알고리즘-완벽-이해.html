@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>RSA 알고리즘 완벽 이해</title>
+  <meta name="description" content="개요">
+  
+  <meta name="author" content="Pragmo">
+  <meta name="copyright" content="&copy; Pragmo 2024">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="개요" />
+  <meta property="og:url" content="https://pragmob.github.io//cryptography/2022/10/18/RSA-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%99%84%EB%B2%BD-%EC%9D%B4%ED%95%B4.html">
+  <meta property="og:site_name" content="플래그모의 리포지토리" />
+  <meta property="og:title" content="RSA 알고리즘 완벽 이해" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://pragmob.github.io//assets/logo.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="RSA 알고리즘 완벽 이해">
+  <meta name="twitter:description" content="개요">
+  <meta name="twitter:image" content="https://pragmob.github.io//assets/logo.png">
+  <meta name="twitter:url" content="https://pragmob.github.io//cryptography/2022/10/18/RSA-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%99%84%EB%B2%BD-%EC%9D%B4%ED%95%B4.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="https://pragmob.github.io//cryptography/2022/10/18/RSA-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%99%84%EB%B2%BD-%EC%9D%B4%ED%95%B4.html">
+	<link rel="alternate" type="application/rss+xml" title="플래그모의 리포지토리" href="https://pragmob.github.io//feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        TeX: {
+          equationNumbers: {
+            autoNumber: "AMS"
+          }
+        },
+        tex2jax: {
+        inlineMath: [ ['$', '$'] ],
+        displayMath: [ ['$$', '$$'] ],
+        processEscapes: true,
+      }
+    });
+    MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+          alert("Math Processing Error: "+message[1]);
+        });
+    MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+          alert("Math Processing Error: "+message[1]);
+        });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+  
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/logo.jpg" alt="플래그모의 리포지토리">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">RSA 알고리즘 완벽 이해</h1>
+      <p class="info">by <strong>Pragmo</strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">October 18, 2022</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/cryptography">Cryptography</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <h1 id="개요">개요</h1>
+
+<p>면접을 앞두고 암호학과 관련된 내용이 생기부에 기록되어있어 빈틈없는 이해를 위해 직접 정리해보고자 한다</p>
+
+<p>사실 과정은 별거 없는데 증명부분이 이해가 안됐던 부분이 있어서 그렇다</p>
+
+<h1 id="키-생성">키 생성</h1>
+
+<p>두 소수 $p$, $q$를 랜덤으로 정한다</p>
+
+<p>$N = pq$ 이라고 둔다</p>
+
+<p>$\varphi(N) = N - p - q + 1 = pq - p - q + 1 = (p - 1)(q - 1)$ 이다</p>
+
+<blockquote>
+  <p>$\varphi$는 오일러 파이 함수로, $\varphi(N)$이라고 하면 $N$이하인 양의 정수 중에서 $N$과 서로소인 수의 개수를 의미한다</p>
+</blockquote>
+
+<p>$\varphi(N)$보다 작고 $\varphi(N)$과 서로소인 양의 정수 $e$를 정한다(보통 65537을 주로 사용)</p>
+
+<p>$de \equiv 1 \pmod{\varphi(N)}$인 양의 정수 $d$를 찾는다</p>
+
+<p>식을 변형하면 $de - Q\varphi(N) = 1$를 만족하는 정수 $d$와 $Q$의 값을 찾는 문제가 되므로 확장 유클리드 호제법</p>
+
+<blockquote>
+  <p>두 정수 $a$, $b$에 대해 $ax + by = \gcd(a, b)$를 만족하는 정수 $x$, $y$의 값을 찾는 알고리즘</p>
+</blockquote>
+
+<p>을 이용해 풀 수 있다</p>
+
+<p>여기까지 공개키 한 쌍$(N, e)$과 비밀키 한 쌍$(N, d)$이 만들어졌다</p>
+
+<h1 id="암복호화">암/복호화</h1>
+
+<p>$ c = m^{e} \bmod N $</p>
+
+<p>$ m = c^{d} \bmod N $</p>
+
+<p>$m$이 평문이고 $c$가 암호문이다</p>
+
+<p>단순한 거듭제곱은 계산 시간이 오래 걸릴 뿐더러 메모리 용량도 크게 잡아먹기에</p>
+
+<p>빠른 모듈러 거듭제곱법을 써서 계산해야 한다</p>
+
+<h1 id="증명">증명</h1>
+
+<p>복호화 공식에 암호화 공식을 대입해 정리하면</p>
+
+<p>$ m = m^{de} \bmod N (0 \leq m &lt; N) $ 이 성립해야 한다</p>
+
+<p>즉 RSA 알고리즘의 증명은</p>
+
+<p>$ m^{de} \equiv m \pmod{N} $이 성립함을 증명하는 문제이다</p>
+
+<p>키 생성 과정의 조건에서 $ de = Q\varphi(N) + 1 = Q(p - 1)(q - 1) + 1 $ 이었으므로 대입하면</p>
+
+<p>$ m^{Q(p - 1)(q - 1)} \cdot m \equiv m \pmod{N} $</p>
+
+<p>해당 식이 성립하는지 보이기 위해 먼저</p>
+
+<ol>
+  <li>$ m^{Q(p - 1)(q - 1)} \cdot m \equiv m \pmod{p} $</li>
+  <li>$ m^{Q(p - 1)(q - 1)} \cdot m \equiv m \pmod{q} $</li>
+</ol>
+
+<p>위의 두 식이 성립함을 보여야 한다</p>
+
+<p>3가지 경우로 나누어 증명해보자</p>
+
+<p>페르마 소정리</p>
+
+<blockquote>
+  <p>n이 소수이고 a가 n의 배수가 아니면 $ a^{n - 1} \equiv 1 \pmod{n} $</p>
+</blockquote>
+
+<p>가 이용된다</p>
+
+<h3 id="i-gcdm-n--1인-경우">i) gcd(m, N) = 1인 경우</h3>
+
+<ol>
+  <li>$ 1^{Q(q - 1)} \cdot m \equiv m \pmod{p} $</li>
+  <li>$ 1^{Q(p - 1)} \cdot m \equiv m \pmod{q} $</li>
+</ol>
+
+<p>페르마 소정리에 의해 두 식 모두 성립한다</p>
+
+<h3 id="ii-gcdm-n--p인-경우">ii) gcd(m, N) = p인 경우</h3>
+
+<ol>
+  <li>$ m^{Q(p - 1)(q - 1)} \cdot m \equiv m \equiv 0 \pmod{p} $</li>
+  <li>$ 1^{Q(p - 1)} \cdot m \equiv m \pmod{q} $</li>
+</ol>
+
+<p>1번은 양변이 0으로 합동이므로 성립하고</p>
+
+<p>2번은 페르마 소정리에 의해 성립한다</p>
+
+<h3 id="iii-gcdm-n--q인-경우">iii) gcd(m, N) = q인 경우</h3>
+
+<ol>
+  <li>$ 1^{Q(q - 1)} \cdot m \equiv m \pmod{p} $</li>
+  <li>$ m^{Q(p - 1)(q - 1)} \cdot m \equiv m \equiv 0 \pmod{q} $</li>
+</ol>
+
+<p>1번은 페르마 소정리에 의해 성립하고</p>
+
+<p>2번은 양변이 0으로 합동이므로 성립한다</p>
+
+<p>따라서 1, 2는 모든 경우의 m에 대해서 성립한다</p>
+
+<p>1, 2에서 중국인의 나머지 정리에 기반한 보조 정리</p>
+
+<blockquote>
+  <p>$ a \equiv b \pmod{p} $ 이고 $ a \equiv b \pmod{q} $ 이고 $ \gcd(p, q) = 1 $ 이라면</p>
+
+  <p>$ a \equiv b \pmod{pq} $ 가 성립</p>
+</blockquote>
+
+<p>를 사용하면</p>
+
+<p>$ m^{Q(p - 1)(q - 1)} \cdot m \equiv m \pmod{N} $ 이 성립함을 알 수 있다</p>
+
+<p>따라서 $ m^{de} \equiv m \pmod{N} $ 이 성립한다(복호화 공식은 제대로 된 값을 뱉는다)</p>
+
+<h1 id="여담">여담</h1>
+
+<p>1) <mark>공개키를 숨기고 비밀키를 공개해도 된다. 암호화 키를 복호화 키로 쓰고 복호화 키를 암호화 키로 써도 된다</mark></p>
+
+<p>$ m^{de} \equiv m \pmod{N} $ 이 성립하므로 $ m^{ed} \equiv m \pmod{N} $ 도 성립하기 때문이다(무슨 말인지 전달이 되겠죠?)</p>
+
+<p>2) <mark>RSA 키의 길이는 N값을 기준으로 한다</mark></p>
+
+<p>예를 들어 RSA 키 길이가 2048bit라는 말은 N이 2^2047 이상, 2^2048미만이라는 뜻</p>
+
+<p>3) <mark>N보다 작은 수만 암호화 할 수 있다</mark></p>
+
+<p>증명 과정에서도 나왔던 것인데, m이 N보다 커져버리면 복호화 공식에 암호화 공식을 대입한</p>
+
+<p>$ m = m^{de} \bmod N $ 에서 좌변은 무조건 N보다 크고, 우변은 무조건 N보다 작게 되어버린다</p>
+
+<p>더 큰 수를 암호화 해야한다면 키 길이를 늘리도록 하자</p>
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+      <a href="//twitter.com/share?text=RSA+%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98+%EC%99%84%EB%B2%BD+%EC%9D%B4%ED%95%B4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fcryptography%2F2022%2F10%2F18%2FRSA-%25EC%2595%258C%25EA%25B3%25A0%25EB%25A6%25AC%25EC%25A6%2598-%25EC%2599%2584%25EB%25B2%25BD-%25EC%259D%25B4%25ED%2595%25B4.html&via="
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=255');return false;">
+        <i class="fa fa-twitter-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+      <a href="//www.facebook.com/sharer.php?t=RSA+%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98+%EC%99%84%EB%B2%BD+%EC%9D%B4%ED%95%B4&u=https%3A%2F%2Fpragmob.github.io%2F%2Fcryptography%2F2022%2F10%2F18%2FRSA-%25EC%2595%258C%25EA%25B3%25A0%25EB%25A6%25AC%25EC%25A6%2598-%25EC%2599%2584%25EB%25B2%25BD-%25EC%259D%25B4%25ED%2595%25B4.html"
+        onclick="window.open(this.href, 'facebook-share', 'width=550,height=255');return false;">
+        <i class="fa fa-facebook-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+      <a href="//www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fpragmob.github.io%2F%2Fcryptography%2F2022%2F10%2F18%2FRSA-%25EC%2595%258C%25EA%25B3%25A0%25EB%25A6%25AC%25EC%25A6%2598-%25EC%2599%2584%25EB%25B2%25BD-%25EC%259D%25B4%25ED%2595%25B4.html"
+        onclick="window.open(this.href, 'linkedin-share', 'width=550,height=255');return false;">
+        <i class="fa fa-linkedin-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=RSA+%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98+%EC%99%84%EB%B2%BD+%EC%9D%B4%ED%95%B4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fcryptography%2F2022%2F10%2F18%2FRSA-%25EC%2595%258C%25EA%25B3%25A0%25EB%25A6%25AC%25EC%25A6%2598-%25EC%2599%2584%25EB%25B2%25BD-%25EC%259D%25B4%25ED%2595%25B4.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+      <a href="//www.pinterest.com/pin/create/button/?description=RSA+%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98+%EC%99%84%EB%B2%BD+%EC%9D%B4%ED%95%B4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fcryptography%2F2022%2F10%2F18%2FRSA-%25EC%2595%258C%25EA%25B3%25A0%25EB%25A6%25AC%25EC%25A6%2598-%25EC%2599%2584%25EB%25B2%25BD-%25EC%259D%25B4%25ED%2595%25B4.html&media=https://pragmob.github.io//assets/logo.jpg"
+        onclick="window.open(this.href, 'pinterest-share', 'width=550,height=255');return false;">
+        <i class="fa fa-pinterest-square fa-lg"></i>
+      </a>
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+      <a href="//www.reddit.com/submit" onclick="window.location = '//www.reddit.com/submit?url=' + encodeURIComponent('https://pragmob.github.io//cryptography/2022/10/18/RSA-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%99%84%EB%B2%BD-%EC%9D%B4%ED%95%B4.html') + '&title=RSA 알고리즘 완벽 이해'; return false">
+        <i class="fa fa-reddit-square fa-lg"></i>
+      </a>
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+	<section class="post-navigation">
+		<span class="prev-post">
+			
+				<a href="/system_hacking/2022/10/03/%EA%B7%B8%EB%A6%BC%EC%9C%BC%EB%A1%9C-%EC%89%BD%EA%B2%8C-%EB%B3%B4%EB%8A%94-tcache-stashing-unlink-attack.html">
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i>
+					</span>
+					<span class="page-number">그림으로 쉽게 보는 tcache stashing unlink attack</span>
+				</a>
+			
+		</span>
+		<span class="next-post">
+			
+				<a href="/forensic/2022/12/10/%EC%9C%88%EB%8F%84%EC%9A%B0-gui-%EC%84%9C%EB%B8%8C%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%EC%9D%B4%ED%95%B4.html">
+					<span class="page-number">윈도우 gui 서브시스템의 이해</span>
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i>
+					</span>
+				</a>
+			
+		</span>
+	</section>
+
+
+
+
+<!-- github comments -->
+<section class="github-comments">
+  <script src="https://utteranc.es/client.js"
+    repo="PragmoB/blog-comments"
+    issue-term="pathname"
+    theme="github-light"
+    crossorigin="anonymous"
+    async>
+  </script>
+</section>
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">플래그모의 리포지토리</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:peullaegeumo@gmail.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">peullaegeumo@gmail.com</span>
+          </a>
+        </li>
+
+        
+          
+        
+          
+        
+          
+          <li>
+            <a href="https://github.com/PragmoB" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">PragmoB</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text">공부하고 경험했던 내용들을 정리해서 올리고 있습니다. 어서오세요
+</p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>

@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>pwnable.kr brain_fuck 문제풀이</title>
+  <meta name="description" content="풀이과정">
+  
+  <meta name="author" content="Pragmo">
+  <meta name="copyright" content="&copy; Pragmo 2024">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="풀이과정" />
+  <meta property="og:url" content="https://pragmob.github.io//system_hacking/2021/08/14/pwnable.kr-brain_fuck-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+  <meta property="og:site_name" content="플래그모의 리포지토리" />
+  <meta property="og:title" content="pwnable.kr brain_fuck 문제풀이" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://pragmob.github.io//assets/logo.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="pwnable.kr brain_fuck 문제풀이">
+  <meta name="twitter:description" content="풀이과정">
+  <meta name="twitter:image" content="https://pragmob.github.io//assets/logo.png">
+  <meta name="twitter:url" content="https://pragmob.github.io//system_hacking/2021/08/14/pwnable.kr-brain_fuck-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="https://pragmob.github.io//system_hacking/2021/08/14/pwnable.kr-brain_fuck-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+	<link rel="alternate" type="application/rss+xml" title="플래그모의 리포지토리" href="https://pragmob.github.io//feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+
+  
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/logo.jpg" alt="플래그모의 리포지토리">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">pwnable.kr brain_fuck 문제풀이</h1>
+      <p class="info">by <strong>Pragmo</strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">August 14, 2021</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/system_hacking">System_hacking</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <h1 id="풀이과정">풀이과정</h1>
+
+<p><img src="/assets/posts/pwnable.kr brain_fuck 문제풀이/카드.png" alt="카드" /></p>
+
+<p>실행파일 bf와 bf_libc.so를 다운받자.</p>
+
+<p>소스코드가 없으므로 어셈블리를 분석해야한다.</p>
+
+<p><img src="/assets/posts/pwnable.kr brain_fuck 문제풀이/main1.png" alt="main1" /><br />
+<img src="/assets/posts/pwnable.kr brain_fuck 문제풀이/main2.png" alt="main2" /></p>
+
+<p>디버거에 올려놓고 보게되면 메모리 보호기법을 사용하고</p>
+
+<p>fgets에서 길이제한을 걸고 있으므로 bof문제는 아닌듯 하다.</p>
+
+<p>0x8048743부터 0x8048772까지의 반복문을 보면 입력 문자열에서 글자를 하나씩 빼면서</p>
+
+<p>brain fuck? 하는걸 볼 수 있는데 자세히 분석해보면</p>
+
+<p><img src="/assets/posts/pwnable.kr brain_fuck 문제풀이/brainfuck1.png" alt="brainfuck1" /><br />
+<img src="/assets/posts/pwnable.kr brain_fuck 문제풀이/brainfuck2.png" alt="brainfuck2" /></p>
+
+<p>글자값이 2b이상 5b이하가 아니면 조건문에 의해 작업을 종료하고</p>
+
+<p>아니면 미리 계산된 주소 테이블에서 값을 꺼내 점프한다</p>
+
+<p>즉 저건 c언어의 switch문이다. 주소 테이블을 분석하면 어떤 값이 어떤 주소에 맵핑됬는지 알수 있는데</p>
+
+<p>&lt; &gt; + - . , 에 대해서만 switch문 안의 코드에 맵핑이 되어있다.</p>
+
+<p>c언어 문법으로 설명하면 case는 &lt; &gt; + - . , 이 있다. 그림에 주석 달아놓은거 참고.</p>
+
+<p>각각의 case들이 뭘 하는지 디버깅하며 자세히 살펴봤다.</p>
+
+<pre><code class="language-C">
+case '&lt;' : [0x804a080]의 값에 1 뺀다
+
+case '&gt;' : [0x804a080]의 값에 1 더한다
+
+case '+' : [[0x804a080]]의 값에 1 더한다
+
+case '-' : [[0x804a080]]의 값에 1 뺀다
+
+case '.' : [[0x804a080]]의 값을 1바이트 읽어들여 화면에 출력한다
+
+case ',' : 값을 1바이트 입력받아 [[0x804a080]]에 저장한다
+
+</code></pre>
+
+<p>참고로 [0x804a080]의 초기값은 0x804a0a0으로 정해져있다!</p>
+
+<p>따라서 위의 명령들을 잘 조합해서 메모리값을 마음대로 조작할 수 있다</p>
+
+<p>하지만 입력 문자열 길이제한이 0x400으로 걸려있기에 조작가능한 메모리 영역은 0x804a0a0 내외로 한정되어 있음</p>
+
+<p>그래서 메모리 조작을 어떻게 해야 효율적일까 생각해본 결과</p>
+
+<p>주소 0x804a0a0은 GOT 주소와 <strong>매우</strong> 가깝다는걸 발견했다.</p>
+
+<p>또한 main 프로시저의 시작 주소와도 가깝다.</p>
+
+<p>저 명령어들을 조합해 GOT에 기록된 api의 주소를 바꿀수 있다</p>
+
+<p>여기까지 생각이 도달했으니</p>
+
+<p>그럼 GOT에서 putchar의 주소를 조작해서 원하는 주소로 점프할 수 있지 않을까?</p>
+
+<p>하는 시나리오를 만들수 있고 실제로 테스트하기 위해</p>
+
+<p>페이로드를 구성해보면 다음과 같이 된다</p>
+
+<pre><code class="language-Python">payload = bytes(b'\x3C' * 0x70 + # 
+                b'\x2C\x3E\x2C\x2C\x3E\x2C\x2C\x3E\x2C\x2C\x3E\x2C\x2E\x00' + b'\n' + # putchar GOT 조작코드, 마지막에 putchar 실행
+
+                b'\x12\n\x34\n\x56\n\x78\n' # 변경될 putchar 주소
+            ) 
+</code></pre>
+
+<p>과정을 디버거로 직접 관찰하기 위해 mov ebp, esp 부분을</p>
+
+<p>jmp short -2 (제자리걸음 도는 코드)로 바꾸고 attach하는 방법을 썼다.</p>
+
+<p><img src="/assets/posts/pwnable.kr brain_fuck 문제풀이/putchar segfault.png" alt="putchar segfault" /></p>
+
+<p>와!! 성공</p>
+
+<p>이제 스킬을 하나 얻었음 어떤 스킬이냐</p>
+
+<p><img src="/assets/posts/pwnable.kr brain_fuck 문제풀이/리턴 투 어드레스.png" alt="리턴 투 어드레스" /></p>
+
+<p>원하는 주소로 한번 점프 가능</p>
+
+<p>한번 뿐인 기회를 어떻게 유용하게 쓸지 정말 오랜 시간동안 고민했다</p>
+
+<p>고민하는 과정은 비하인드 항목에 작성하고, 여기는 고민한 결과만 작성한다.</p>
+
+<p>main 프로시저에서 memset과 fgets를 호출하는 부분이 이어져있음을 발견했다.</p>
+
+<p>만약에 GOT를 조작해서 memset를 gets로 바꾸고 fgets를 system으로 바꾼다면?</p>
+
+<p>main이 다시 실행된다고 하면 gets로 입력받은 커맨드가 system으로 실행된다.</p>
+
+<p>매개변수 형식도 놀라울 정도로 딱딱 들어맞는다.</p>
+
+<pre><code class="language-C">void *memset(void *dest, int c, size_t count);
+char *gets(char *buffer);
+
+char *fgets (char *string, int n, FILE *stream);
+int system(const char *command);
+</code></pre>
+
+<p>아까 얻은 기회로 main 프로시저로 다시 한번 점프한다면 위의 아이디어를 구현 할 수 있다</p>
+
+<p>그런데 문제가 하나 있다</p>
+
+<p>공유 라이브러리의 베이스 주소는 실행할 때마다 바뀌기에</p>
+
+<p>서버의 gets와 system api의 주소를 정확히 알 수 없다</p>
+
+<p>어? 근데 putchar로 GOT에 있는 값을 출력하게 할 수 있지 않을까?</p>
+
+<p>문제에 putchar를 넣은것도 putchar를 사용하라는 출제의도일 것이라 생각이 들었다.</p>
+
+<p>putchar를 사용해야 하므로 출력은 GOT의 putchar 주소를 조작하기 전에 이뤄져야 한다</p>
+
+<p>주어진 libc에서 putchar의 오프셋은 0x61920이므로</p>
+
+<p>GOT의 putchar 주소를 읽어들여 libc 로딩 주소를 구할 수 있다</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>libc_base = putchar_addr - 0x61920
+</code></pre></div></div>
+
+<p>libc 로딩 주소에 각 api 오프셋을 더해 api의 주소를 구한다</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>system_addr = libc_base + system_offset
+gets_addr = libc_base + gets_offset
+</code></pre></div></div>
+
+<p>구한 주소를 잘 가공해 페이로드에 붙이고 전송하면 된다.</p>
+
+<p>putchar의 로딩 주소 정보를 받을 필요가 있으므로</p>
+
+<p>info leak 페이로드 한 번,</p>
+
+<p>실제 공격 페이로드 한 번</p>
+
+<p>두번으로 나눠 전송한다.</p>
+
+<p>실제 서버 환경과 똑같이 테스트 하기 위해</p>
+
+<p>bf_libc.so에 맞는 라이브러리 로더로 교체한뒤 진행했다</p>
+
+<div class="language-zsh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>patchelf <span class="nt">--set-interpreter</span> /home/kali/Desktop/ld_bf.so.2 ./bf
+</code></pre></div></div>
+
+<p>그리고 몇 시간의 디버깅 후 페이로드를 완성했다</p>
+
+<p><a href="https://pragmob.github.io//assets/posts/pwnable.kr%20brain_fuck%20%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4/exploit_brain_fuck.py">exploit_brain_fuck.py</a>로 올려놓음</p>
+
+<p><img src="/assets/posts/pwnable.kr brain_fuck 문제풀이/정답.png" alt="정답" /></p>
+
+<p>flag : Brainfuck? what a weird language..</p>
+
+<h1 id="비하인드">비하인드</h1>
+
+<p>write up도 장난 아니네</p>
+
+<p>문제 푸는게 30시간쯤 걸린 것 같은데</p>
+
+<p>이건 오늘 점심부터 작성했으니까</p>
+
+<p>5시간 ㄷㄷ</p>
+
+<h2 id="삽질1">삽질#1</h2>
+
+<p><img src="/assets/posts/pwnable.kr brain_fuck 문제풀이/canary.png" alt="canary" /></p>
+
+<p>아니 이거는 security cookie?</p>
+
+<p>리눅스에도 비슷한게 있구나~</p>
+
+<p>이거 우회해서 bof 성공시키는건갑네</p>
+
+<p>윈도우에선 SEH 덮어서 우회하니까</p>
+
+<p>리눅스도 뭐 그렇게 하면 되겠지?</p>
+
+<p><img src="/assets/posts/pwnable.kr brain_fuck 문제풀이/canary검색.png" alt="canary검색" /></p>
+
+<p><img src="/assets/posts/pwnable.kr brain_fuck 문제풀이/canary 우회법검색.png" alt="canary 우회법검색" /></p>
+
+<p><strong>(시간낭비)</strong></p>
+
+<h2 id="삽질2">삽질#2</h2>
+
+<p>아아~ 그래그래 우회기법 쓰는건 아니지만</p>
+
+<p>stack_chk_failed 주소 조작하는거 맞지?</p>
+
+<p>그러면 canary 건드려도 종료 안되니까</p>
+
+<p>마침 스택 타이밍도 절묘했지</p>
+
+<p><img src="/assets/posts/pwnable.kr brain_fuck 문제풀이/canary직전.png" alt="canary직전" /></p>
+
+<p>canary 실행 직전에</p>
+
+<p><img src="/assets/posts/pwnable.kr brain_fuck 문제풀이/직전스택.png" alt="직전스택" /></p>
+
+<p>스택 최상단에 입력한 문자열이 딱 뜨니까</p>
+
+<p>stack chk failed가 system으로 바뀌면 완벽하네</p>
+
+<p>근데 fgets에 길이제한 있었더라</p>
+
+<p>카나리형에게 닿을수 없어</p>
+
+<p>아니 어차피 길이제한 할거면 카나리는 대체 왜 넣은겨</p>
+
+<h2 id="삽질3">삽질#3</h2>
+
+<p>libc가.. 로딩이 안돼</p>
+
+<p>뭐 검색을 어떻게 해야 하는지 모르겠고 암담하다</p>
+
+<p><img src="/assets/posts/pwnable.kr brain_fuck 문제풀이/검색기록.png" alt="검색기록" /></p>
+
+<p><strong>진짜 무수한 검색의 흔적들 (중간에 노동요 복용해주고)</strong></p>
+
+<p>그러다 한줄기의 빛을 발견</p>
+
+<p>https://typemiss.tistory.com/2</p>
+
+<p>진짜 참고 많이 됐어요</p>
+
+<p>https://github.com/matrix1001/welpwn/tree/master/PwnContext/libs/ld.so</p>
+
+<p>여기서 로더 다운 가능하대네</p>
+
+<p>patchelf로 로더 교체하면 bf_libc.so 로딩 가능</p>
+
+<h2 id="고뇌">고뇌</h2>
+
+<p><img src="/assets/posts/pwnable.kr brain_fuck 문제풀이/리턴 투 어드레스.png" alt="리턴 투 어드레스" /></p>
+
+<p>어디로 점프해야 제일 효율적일까</p>
+
+<p>만약에 RET을 덮어쓰고</p>
+
+<pre><code class="language-asm">leave
+ret
+</code></pre>
+
+<p>로 점프한다면</p>
+
+<p>아니지 위쪽 RET은 덮을 수 없잖아</p>
+
+<p>그럼 leave가 2번 연속으로 있는</p>
+
+<pre><code class="language-asm">leave
+leave
+ret
+</code></pre>
+
+<p>가젯을 찾아서 점프한다면?</p>
+
+<p>아니지 애초에 RET을 덮을수 있단 전제가 잘못됐어</p>
+
+<p>실행흐름은 변하지 않겠지</p>
+
+<p>근데 만약에 된다면 스택까지 같이 컨트롤 되니까</p>
+
+<p>RTL을 시도해 볼 수도 있었겠네 근데 스택을 맘대로 조작할 수 있었다면</p>
+
+<p>애초에 이런 방법은 쓰지 않았을테니까</p>
+
+<p>아니면 만약 system 주소로 점프한다면?</p>
+
+<p>이것도 매개변수가 안맞으니까 안되고</p>
+
+<p>스택 조작이 자유롭지 못하니까 어렵네</p>
+
+<p>매개변수가 맞는건 memset이랑 fgets정도가 있으니까</p>
+
+<p>그럼 memset호출 아니면 fgets호출 쪽으로 점프를 한다면..</p>
+
+<p>그럼 그 전에 스택이 깔끔히 정리가 되어있어야 하네 딱 맞는 가젯도 필요하고</p>
+
+<p>너무 복잡해서 안되고</p>
+
+<p>main으로 다시 한번 점프해서</p>
+
+<p>만약에 memset을 gets로 바꾸고 fgets을 system으로 바꾼다면?</p>
+
+<p>=&gt; 스택 프레임도 깔끔하게 새로 하나 만들어지고 실현 가능성이 보임</p>
+
+<p>그리고 문제풀이 성공.</p>
+
+<h2 id="성인물">성인물?</h2>
+
+<p><img src="/assets/posts/pwnable.kr brain_fuck 문제풀이/성인인증.png" alt="성인인증" /></p>
+
+<p>구글코리아 선정 청소년에게 유해한 문제ㅋㅋ</p>
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+      <a href="//twitter.com/share?text=pwnable.kr+brain_fuck+%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2021%2F08%2F14%2Fpwnable.kr-brain_fuck-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html&via="
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=255');return false;">
+        <i class="fa fa-twitter-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+      <a href="//www.facebook.com/sharer.php?t=pwnable.kr+brain_fuck+%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4&u=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2021%2F08%2F14%2Fpwnable.kr-brain_fuck-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html"
+        onclick="window.open(this.href, 'facebook-share', 'width=550,height=255');return false;">
+        <i class="fa fa-facebook-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+      <a href="//www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2021%2F08%2F14%2Fpwnable.kr-brain_fuck-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html"
+        onclick="window.open(this.href, 'linkedin-share', 'width=550,height=255');return false;">
+        <i class="fa fa-linkedin-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=pwnable.kr+brain_fuck+%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2021%2F08%2F14%2Fpwnable.kr-brain_fuck-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+      <a href="//www.pinterest.com/pin/create/button/?description=pwnable.kr+brain_fuck+%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2021%2F08%2F14%2Fpwnable.kr-brain_fuck-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html&media=https://pragmob.github.io//assets/logo.jpg"
+        onclick="window.open(this.href, 'pinterest-share', 'width=550,height=255');return false;">
+        <i class="fa fa-pinterest-square fa-lg"></i>
+      </a>
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+      <a href="//www.reddit.com/submit" onclick="window.location = '//www.reddit.com/submit?url=' + encodeURIComponent('https://pragmob.github.io//system_hacking/2021/08/14/pwnable.kr-brain_fuck-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html') + '&title=pwnable.kr brain_fuck 문제풀이'; return false">
+        <i class="fa fa-reddit-square fa-lg"></i>
+      </a>
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+	<section class="post-navigation">
+		<span class="prev-post">
+			
+				<a href="/system_hacking/2021/08/11/pwnable.kr-bof-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i>
+					</span>
+					<span class="page-number">pwnable.kr bof 문제풀이</span>
+				</a>
+			
+		</span>
+		<span class="next-post">
+			
+				<a href="/system_hacking/2021/08/16/pwnable.kr-simple-login-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+					<span class="page-number">pwnable.kr simple login 문제풀이</span>
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i>
+					</span>
+				</a>
+			
+		</span>
+	</section>
+
+
+
+
+<!-- github comments -->
+<section class="github-comments">
+  <script src="https://utteranc.es/client.js"
+    repo="PragmoB/blog-comments"
+    issue-term="pathname"
+    theme="github-light"
+    crossorigin="anonymous"
+    async>
+  </script>
+</section>
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">플래그모의 리포지토리</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:peullaegeumo@gmail.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">peullaegeumo@gmail.com</span>
+          </a>
+        </li>
+
+        
+          
+        
+          
+        
+          
+          <li>
+            <a href="https://github.com/PragmoB" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">PragmoB</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text">공부하고 경험했던 내용들을 정리해서 올리고 있습니다. 어서오세요
+</p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>

@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>백준 파이프 옮기기1(17070) 문제풀이</title>
+  <meta name="description" content="문제 이해">
+  
+  <meta name="author" content="Pragmo">
+  <meta name="copyright" content="&copy; Pragmo 2024">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="문제 이해" />
+  <meta property="og:url" content="https://pragmob.github.io//ps/2023/02/06/%EB%B0%B1%EC%A4%80-%ED%8C%8C%EC%9D%B4%ED%94%84-%EC%98%AE%EA%B8%B0%EA%B8%B01(17070)-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+  <meta property="og:site_name" content="플래그모의 리포지토리" />
+  <meta property="og:title" content="백준 파이프 옮기기1(17070) 문제풀이" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://pragmob.github.io//assets/logo.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="백준 파이프 옮기기1(17070) 문제풀이">
+  <meta name="twitter:description" content="문제 이해">
+  <meta name="twitter:image" content="https://pragmob.github.io//assets/logo.png">
+  <meta name="twitter:url" content="https://pragmob.github.io//ps/2023/02/06/%EB%B0%B1%EC%A4%80-%ED%8C%8C%EC%9D%B4%ED%94%84-%EC%98%AE%EA%B8%B0%EA%B8%B01(17070)-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="https://pragmob.github.io//ps/2023/02/06/%EB%B0%B1%EC%A4%80-%ED%8C%8C%EC%9D%B4%ED%94%84-%EC%98%AE%EA%B8%B0%EA%B8%B01(17070)-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+	<link rel="alternate" type="application/rss+xml" title="플래그모의 리포지토리" href="https://pragmob.github.io//feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+
+  
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/logo.jpg" alt="플래그모의 리포지토리">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">백준 파이프 옮기기1(17070) 문제풀이</h1>
+      <p class="info">by <strong>Pragmo</strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">February 6, 2023</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/PS">Ps</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <h1 id="문제-이해">문제 이해</h1>
+
+<p><img src="/assets/posts/백준 파이프 옮기기1(17070) 문제풀이/문제상황.png" alt="문제상황" /></p>
+
+<p>위와 같은 N*N (3 ≤ N ≤ 16) 크기의 격자판에서 왼쪽 위에 가로방향으로 누워있는 파이프를 밀어서 오른쪽 밑 끝까지 옮겨야 하는 상황이다</p>
+
+<p>밀 수 있는 방향은 →, ↘, ↓으로만 가능하며 진행 방향에 장애물이 없어야 한다</p>
+
+<p>구체적으로</p>
+
+<ol>
+  <li>가로방향으로 이동할 경우 오른쪽 칸에 공간이 있어야 한다</li>
+  <li>세로방향으로 이동할 경우 아래쪽 칸에 공간이 있어야 한다</li>
+  <li>대각선방향으로 이동할 경우 오른쪽, 아래쪽, 대각방향 칸에 공간이 있어야 한다</li>
+</ol>
+
+<p>파이프는 기본적으로 누운 방향으로만 진행할 수 있지만, 한 칸 이동에 45도씩 회전하며 진행하는 것이 가능하다</p>
+
+<p>아래는 4*4 크기 격자판에서 오른쪽 밑 끝까지 도달한 경우의 예시이다</p>
+
+<p><img src="/assets/posts/백준 파이프 옮기기1(17070) 문제풀이/이동예시.png" alt="이동예시" /></p>
+
+<p>파이프를 오른쪽 밑 끝까지 이동시키는 경우의 수를 구하라</p>
+
+<h1 id="입출력">입출력</h1>
+
+<p>첫째 줄은 N값<br />
+둘째 줄부터 격자판의 상태가 주어진다. 빈 공간은 0, 장애물은 1로 표현된다</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>6
+0 0 0 0 0 0
+0 1 0 0 0 0
+0 0 0 0 0 0
+0 0 0 0 1 0
+0 0 0 0 0 0
+0 0 0 0 0 0
+</code></pre></div></div>
+
+<p>경우의 수를 계산해 출력하면 정답이다</p>
+
+<p><code class="language-plaintext highlighter-rouge">4</code></p>
+
+<h1 id="풀이">풀이</h1>
+
+<p><img src="/assets/posts/백준 파이프 옮기기1(17070) 문제풀이/DFS.png" alt="DFS" /></p>
+
+<p>위의 그림과 같이 가능한 경로를 가지를 뻗어나가듯이 탐색해보면 될 것 같다</p>
+
+<p>즉 dfs이다</p>
+
+<p>도착지점에 도달하면 1을 반환하고, 막다른 길이면 0을 반환한다</p>
+
+<p>파이썬으로 구현하면 이렇게 된다</p>
+
+<pre><code class="language-Python">
+"""
+dirt    = 0 = horizon
+        = 1 = vertical
+        = 2 = diagonal
+"""
+def recur(place, loc=(0, 1), dirt=0) :
+    horizon = place[loc[0]][loc[1] + 1]
+    vertical = place[loc[0] + 1][loc[1]]
+    diagonal = place[loc[0] + 1][loc[1] + 1]
+    
+    result = 0
+
+    # 가로 방향 이동
+    if horizon == 0 and (dirt==0 or dirt==2) :
+        result += recur(place, (loc[0], loc[1] + 1), 0)
+    
+    # 세로 방향 이동
+    if vertical == 0 and (dirt==1 or dirt==2):
+        result += recur(place, (loc[0] + 1, loc[1]), 1)
+
+    # 대각선 방향 이동
+    if horizon == 0 and vertical == 0 and diagonal == 0:
+        result += recur(place, (loc[0] + 1, loc[1] + 1), 2)
+
+    # 목적지 도착
+    if diagonal == 2 :
+        return 1
+    
+    return result
+
+N = int(input())
+place = []
+
+for i in range(N) :
+    place.append(list(map(int, input().split())))
+    place[i].append(1) # 막힌 부분은 1로 둘러쌈
+
+place.append([1 for _ in range(N)]) # 막힌 부분은 1로 둘러쌈
+place[-1].append(2) # 도착지점은 2로 표시
+
+print(recur(place))
+</code></pre>
+
+<p>가지를 뻗어나가는 과정이 재귀함수로 구현되었고, 조건 검사를 통해 가지를 뻗을지 말지 결정한다</p>
+
+<p>그러나 채점 과정에서 70%쯤에 시간 초과가 떴다</p>
+
+<p>알고리즘에 개선 사항이 존재 하는가를 생각해봤지만 저것보다 깔끔하게 작성할 수는 없을 것 같아서 포기하고 다른 분이 제출한 정답을 봤다</p>
+
+<p>하지만 내가 작성한 알고리즘과 별다른 차이가 없었다. 오히려 더 복잡하고 비효율적으로 보였는데 무슨일인지;;</p>
+
+<p>답답해서 좀 더 찾아보니 언어를 바꿔보라는 조언이 보였다</p>
+
+<p>이유는 언어마다 처리속도가 다르기 때문이라고..</p>
+
+<p>파이썬은 컴파일 과정을 거치지 않기 때문에 속도가 느리다는 것쯤은 알고 있었으나 백준 채점시에도 똑같이 적용되는줄은 몰랐다</p>
+
+<p>사용 언어에 따라 합/불이 갈린다는건 문제가 있지 않은가 하는 생각도 든다</p>
+
+<p>어쨌거나 통과는 하고 싶으니 c++로 옮겨서 제출했다</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+
+typedef unsigned int UINT;
+typedef unsigned int DWORD;
+typedef unsigned short WORD;
+
+#define HIWORD(l) ((WORD)((((DWORD)(l)) &gt;&gt; 16) &amp; 0xffff))
+#define LOWORD(l) ((WORD)(((DWORD)(l)) &amp; 0xffff))
+
+using namespace std;
+
+enum DIRT {
+	Hor = 0,
+	Ver = 1,
+	Dia = 2
+};
+
+int recur(UINT** place, DWORD loc = 0x00000001, UINT dirt = Hor)
+{
+	WORD horizon = place[HIWORD(loc)][LOWORD(loc) + 1];
+	WORD vertical = place[HIWORD(loc) + 1][LOWORD(loc)];
+	WORD diagonal = place[HIWORD(loc) + 1][LOWORD(loc) + 1];
+
+	UINT result = 0;
+
+	// 가로 방향 이동
+	if (horizon == 0 &amp;&amp; (dirt == Hor || dirt == Dia))
+		result += recur(place, loc + 1, 0);
+
+	// 세로 방향 이동
+	if (vertical == 0 &amp;&amp; (dirt == Ver || dirt == Dia))
+		result += recur(place, loc + (1 &lt;&lt; 16), 1);
+
+	// 대각선 방향 이동
+	if (horizon == 0 &amp;&amp; vertical == 0 &amp;&amp; diagonal == 0)
+		result += recur(place, loc + (1 &lt;&lt; 16) + 1, 2);
+
+	// 목적지 도착
+	if (diagonal == 2)
+		return 1;
+
+	return result;
+}
+
+int main()
+{
+	UINT N;
+	cin &gt;&gt; N;
+
+	UINT** place = new UINT*[N + 1];
+	for (UINT i = 0; i &lt; N; i++)
+	{
+		place[i] = new UINT[N + 1];
+		for (UINT j = 0; j &lt; N; j++)
+			cin &gt;&gt; place[i][j];
+		place[i][N] = 1; // 가로줄 맨끝을 1로 막아놓음
+	}
+	// 마지막줄은 1로 막아놓고 맨 끝에 2를 넣음
+		place[N] = new UINT[N + 1];
+		for (UINT i = 0; i &lt; N; i++)
+			place[N][i] = 1;
+		place[N][N] = 2;
+
+	cout &lt;&lt; recur(place);
+}
+</code></pre>
+
+<p>통과!</p>
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+      <a href="//twitter.com/share?text=%EB%B0%B1%EC%A4%80+%ED%8C%8C%EC%9D%B4%ED%94%84+%EC%98%AE%EA%B8%B0%EA%B8%B01%2817070%29+%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fps%2F2023%2F02%2F06%2F%25EB%25B0%25B1%25EC%25A4%2580-%25ED%258C%258C%25EC%259D%25B4%25ED%2594%2584-%25EC%2598%25AE%25EA%25B8%25B0%25EA%25B8%25B01%2817070%29-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html&via="
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=255');return false;">
+        <i class="fa fa-twitter-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+      <a href="//www.facebook.com/sharer.php?t=%EB%B0%B1%EC%A4%80+%ED%8C%8C%EC%9D%B4%ED%94%84+%EC%98%AE%EA%B8%B0%EA%B8%B01%2817070%29+%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4&u=https%3A%2F%2Fpragmob.github.io%2F%2Fps%2F2023%2F02%2F06%2F%25EB%25B0%25B1%25EC%25A4%2580-%25ED%258C%258C%25EC%259D%25B4%25ED%2594%2584-%25EC%2598%25AE%25EA%25B8%25B0%25EA%25B8%25B01%2817070%29-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html"
+        onclick="window.open(this.href, 'facebook-share', 'width=550,height=255');return false;">
+        <i class="fa fa-facebook-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+      <a href="//www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fpragmob.github.io%2F%2Fps%2F2023%2F02%2F06%2F%25EB%25B0%25B1%25EC%25A4%2580-%25ED%258C%258C%25EC%259D%25B4%25ED%2594%2584-%25EC%2598%25AE%25EA%25B8%25B0%25EA%25B8%25B01%2817070%29-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html"
+        onclick="window.open(this.href, 'linkedin-share', 'width=550,height=255');return false;">
+        <i class="fa fa-linkedin-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=%EB%B0%B1%EC%A4%80+%ED%8C%8C%EC%9D%B4%ED%94%84+%EC%98%AE%EA%B8%B0%EA%B8%B01%2817070%29+%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fps%2F2023%2F02%2F06%2F%25EB%25B0%25B1%25EC%25A4%2580-%25ED%258C%258C%25EC%259D%25B4%25ED%2594%2584-%25EC%2598%25AE%25EA%25B8%25B0%25EA%25B8%25B01%2817070%29-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+      <a href="//www.pinterest.com/pin/create/button/?description=%EB%B0%B1%EC%A4%80+%ED%8C%8C%EC%9D%B4%ED%94%84+%EC%98%AE%EA%B8%B0%EA%B8%B01%2817070%29+%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fps%2F2023%2F02%2F06%2F%25EB%25B0%25B1%25EC%25A4%2580-%25ED%258C%258C%25EC%259D%25B4%25ED%2594%2584-%25EC%2598%25AE%25EA%25B8%25B0%25EA%25B8%25B01%2817070%29-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html&media=https://pragmob.github.io//assets/logo.jpg"
+        onclick="window.open(this.href, 'pinterest-share', 'width=550,height=255');return false;">
+        <i class="fa fa-pinterest-square fa-lg"></i>
+      </a>
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+      <a href="//www.reddit.com/submit" onclick="window.location = '//www.reddit.com/submit?url=' + encodeURIComponent('https://pragmob.github.io//ps/2023/02/06/%EB%B0%B1%EC%A4%80-%ED%8C%8C%EC%9D%B4%ED%94%84-%EC%98%AE%EA%B8%B0%EA%B8%B01(17070)-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html') + '&title=백준 파이프 옮기기1(17070) 문제풀이'; return false">
+        <i class="fa fa-reddit-square fa-lg"></i>
+      </a>
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+	<section class="post-navigation">
+		<span class="prev-post">
+			
+				<a href="/forensic/2023/01/16/%EB%B3%BC%EB%9D%BC%ED%8B%B8%EB%A6%AC%ED%8B%B0-%EB%AA%85%EB%A0%B9%EC%96%B4(shell)-%ED%9E%88%EC%8A%A4%ED%86%A0%EB%A6%AC-%EB%B6%84%EC%84%9D-%EC%8B%9C-%EC%88%99%EC%A7%80%ED%95%A0-%EC%82%AC%ED%95%AD%EB%93%A4.html">
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i>
+					</span>
+					<span class="page-number">볼라틸리티 명령어(shell) 히스토리 분석 시 숙지할 사항들</span>
+				</a>
+			
+		</span>
+		<span class="next-post">
+			
+				<a href="/ps/2024/12/18/%EB%B0%B1%EC%A4%80-9252-LCS-2-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+					<span class="page-number">백준 9252 LCS 2 문제풀이</span>
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i>
+					</span>
+				</a>
+			
+		</span>
+	</section>
+
+
+
+
+<!-- github comments -->
+<section class="github-comments">
+  <script src="https://utteranc.es/client.js"
+    repo="PragmoB/blog-comments"
+    issue-term="pathname"
+    theme="github-light"
+    crossorigin="anonymous"
+    async>
+  </script>
+</section>
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">플래그모의 리포지토리</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:peullaegeumo@gmail.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">peullaegeumo@gmail.com</span>
+          </a>
+        </li>
+
+        
+          
+        
+          
+        
+          
+          <li>
+            <a href="https://github.com/PragmoB" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">PragmoB</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text">공부하고 경험했던 내용들을 정리해서 올리고 있습니다. 어서오세요
+</p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>

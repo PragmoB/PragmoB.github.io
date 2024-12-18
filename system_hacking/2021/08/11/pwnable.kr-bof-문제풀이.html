@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>pwnable.kr bof 문제풀이</title>
+  <meta name="description" content="풀이과정">
+  
+  <meta name="author" content="Pragmo">
+  <meta name="copyright" content="&copy; Pragmo 2024">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="풀이과정" />
+  <meta property="og:url" content="https://pragmob.github.io//system_hacking/2021/08/11/pwnable.kr-bof-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+  <meta property="og:site_name" content="플래그모의 리포지토리" />
+  <meta property="og:title" content="pwnable.kr bof 문제풀이" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://pragmob.github.io//assets/logo.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="pwnable.kr bof 문제풀이">
+  <meta name="twitter:description" content="풀이과정">
+  <meta name="twitter:image" content="https://pragmob.github.io//assets/logo.png">
+  <meta name="twitter:url" content="https://pragmob.github.io//system_hacking/2021/08/11/pwnable.kr-bof-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="https://pragmob.github.io//system_hacking/2021/08/11/pwnable.kr-bof-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+	<link rel="alternate" type="application/rss+xml" title="플래그모의 리포지토리" href="https://pragmob.github.io//feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+
+  
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/logo.jpg" alt="플래그모의 리포지토리">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">pwnable.kr bof 문제풀이</h1>
+      <p class="info">by <strong>Pragmo</strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">August 11, 2021</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/system_hacking">System_hacking</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <h1 id="풀이과정">풀이과정</h1>
+
+<p><img src="/assets/posts/pwnable.kr bof 문제풀이/카드.png" alt="카드" /></p>
+
+<p>링크에 있는 bof실행파일과 소스코드를 다운받자.</p>
+
+<p><img src="/assets/posts/pwnable.kr bof 문제풀이/소스코드.png" alt="소스코드" /></p>
+
+<p>소스코드를 보면 gets함수 부분에서 bof 취약점이 발생하는걸 확인 할 수 있는데</p>
+
+<p>이 부분에서 key값을 0xcafebabe로 덮어씌워야 한다.</p>
+
+<p>key값을 0xcafebabe로 오차없이 조작하기 위해선 스택에서 overflowme와 key사이 공간의 크기를 <strong>정확히</strong></p>
+
+<p>알 필요가 있기에 bof실행파일을 분석해줘야 한다.</p>
+
+<p><img src="/assets/posts/pwnable.kr bof 문제풀이/func 디스어셈.png" alt="func 디스어셈" /></p>
+
+<p>+29 부분의 ebp-0x2c가 overflowme, +40부분의 ebp+0x8가 key의 시작주소이다.</p>
+
+<p>따라서 overflowme와 key사이 공간의 크기는 0x34(52)이다.</p>
+
+<p>이 정보를 토대로 익스플로잇을 구성하면</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span> <span class="s">'a'</span><span class="o">*</span><span class="mi">52</span> <span class="o">+</span> <span class="s">'</span><span class="se">\xbe\xba\xfe\xca</span><span class="s">'</span>
+</code></pre></div></div>
+
+<p>이렇게 된다.</p>
+
+<p>이제 이 값을 전송하기만 하면</p>
+
+<p><img src="/assets/posts/pwnable.kr bof 문제풀이/정답.png" alt="정답" /></p>
+
+<p>플래그를 얻을 수 있다.</p>
+
+<p>flag : daddy, I just pwned a buFFer :)</p>
+
+<h1 id="느낀점">느낀점</h1>
+
+<p>시스템 해킹 지식은 충분했지만</p>
+
+<p>리눅스 환경에 익숙하지 않아</p>
+
+<p>개인적으로 많이 헤맸던 문제</p>
+
+<h1 id="번외">번외</h1>
+
+<h2 id="삽질1">삽질#1</h2>
+
+<p>overflowme와 key사이의 공간을 구하기 위해</p>
+
+<p>bof 실행파일을 동적분석 해보자</p>
+
+<p><img src="/assets/posts/pwnable.kr bof 문제풀이/bof디버거.png" alt="bof디버거" /></p>
+
+<p>??</p>
+
+<p>근데 실행자체가 안되는데 분석을 어떻게 하나</p>
+
+<p>그렇다면 실행파일을 직접 만들면 되지! 소스코드도 있으니까</p>
+
+<p>이렇게 하면.. overflowme와 key사이 공간은 48byte네!</p>
+
+<p>하지만 당연히 안먹히고</p>
+
+<p>bof는 실행할순 없지만 gdb로 정적분석 할 순 있더라</p>
+
+<p>깨닫기 전까지 1시간 날렸다</p>
+
+<h2 id="삽질2">삽질#2</h2>
+
+<p>드디어 익스플로잇을 완성했다! 하 힘들었다 진짜ㅠㅠ</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(python -c "print 'a'*52 + '\xbe\xba\xfe\xca'") | nc pwnable.kr 9000
+</code></pre></div></div>
+
+<p>Nah가 안뜨는걸로 봐서</p>
+
+<p>분명 /bin/sh는 제대로 실행됬는데.. ls ls ls ls
+cat flag</p>
+
+<p>명령어가 말을 안듣는데..  이건 답지를 볼 수 밖에 없다</p>
+
+<p>저기 ;cat은 왜 붙여야 하는지 모르겠지만 그렇지만</p>
+
+<p>어쨌든 flag는 떴네</p>
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+      <a href="//twitter.com/share?text=pwnable.kr+bof+%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2021%2F08%2F11%2Fpwnable.kr-bof-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html&via="
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=255');return false;">
+        <i class="fa fa-twitter-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+      <a href="//www.facebook.com/sharer.php?t=pwnable.kr+bof+%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4&u=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2021%2F08%2F11%2Fpwnable.kr-bof-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html"
+        onclick="window.open(this.href, 'facebook-share', 'width=550,height=255');return false;">
+        <i class="fa fa-facebook-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+      <a href="//www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2021%2F08%2F11%2Fpwnable.kr-bof-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html"
+        onclick="window.open(this.href, 'linkedin-share', 'width=550,height=255');return false;">
+        <i class="fa fa-linkedin-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=pwnable.kr+bof+%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2021%2F08%2F11%2Fpwnable.kr-bof-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+      <a href="//www.pinterest.com/pin/create/button/?description=pwnable.kr+bof+%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2021%2F08%2F11%2Fpwnable.kr-bof-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html&media=https://pragmob.github.io//assets/logo.jpg"
+        onclick="window.open(this.href, 'pinterest-share', 'width=550,height=255');return false;">
+        <i class="fa fa-pinterest-square fa-lg"></i>
+      </a>
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+      <a href="//www.reddit.com/submit" onclick="window.location = '//www.reddit.com/submit?url=' + encodeURIComponent('https://pragmob.github.io//system_hacking/2021/08/11/pwnable.kr-bof-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html') + '&title=pwnable.kr bof 문제풀이'; return false">
+        <i class="fa fa-reddit-square fa-lg"></i>
+      </a>
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+	<section class="post-navigation">
+		<span class="prev-post">
+			
+				<a href="/system_hacking/2021/08/11/pwnable.kr-flag-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i>
+					</span>
+					<span class="page-number">pwnable.kr flag 문제풀이</span>
+				</a>
+			
+		</span>
+		<span class="next-post">
+			
+				<a href="/system_hacking/2021/08/14/pwnable.kr-brain_fuck-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+					<span class="page-number">pwnable.kr brain_fuck 문제풀이</span>
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i>
+					</span>
+				</a>
+			
+		</span>
+	</section>
+
+
+
+
+<!-- github comments -->
+<section class="github-comments">
+  <script src="https://utteranc.es/client.js"
+    repo="PragmoB/blog-comments"
+    issue-term="pathname"
+    theme="github-light"
+    crossorigin="anonymous"
+    async>
+  </script>
+</section>
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">플래그모의 리포지토리</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:peullaegeumo@gmail.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">peullaegeumo@gmail.com</span>
+          </a>
+        </li>
+
+        
+          
+        
+          
+        
+          
+          <li>
+            <a href="https://github.com/PragmoB" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">PragmoB</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text">공부하고 경험했던 내용들을 정리해서 올리고 있습니다. 어서오세요
+</p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>

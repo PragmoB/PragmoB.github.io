@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>메모리 내 레지스트리 하이브 구조 정리</title>
+  <meta name="description" content="메모리 포렌식(혜지원)의 레지스트리 분석 파트에서 생략된 내용이 많아 관련 배경지식을 정리하고자 한다">
+  
+  <meta name="author" content="Pragmo">
+  <meta name="copyright" content="&copy; Pragmo 2024">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="메모리 포렌식(혜지원)의 레지스트리 분석 파트에서 생략된 내용이 많아 관련 배경지식을 정리하고자 한다" />
+  <meta property="og:url" content="https://pragmob.github.io//forensic/2022/09/15/%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%82%B4-%EB%A0%88%EC%A7%80%EC%8A%A4%ED%8A%B8%EB%A6%AC-%ED%95%98%EC%9D%B4%EB%B8%8C-%EA%B5%AC%EC%A1%B0-%EC%A0%95%EB%A6%AC.html">
+  <meta property="og:site_name" content="플래그모의 리포지토리" />
+  <meta property="og:title" content="메모리 내 레지스트리 하이브 구조 정리" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://pragmob.github.io//assets/logo.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="메모리 내 레지스트리 하이브 구조 정리">
+  <meta name="twitter:description" content="메모리 포렌식(혜지원)의 레지스트리 분석 파트에서 생략된 내용이 많아 관련 배경지식을 정리하고자 한다">
+  <meta name="twitter:image" content="https://pragmob.github.io//assets/logo.png">
+  <meta name="twitter:url" content="https://pragmob.github.io//forensic/2022/09/15/%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%82%B4-%EB%A0%88%EC%A7%80%EC%8A%A4%ED%8A%B8%EB%A6%AC-%ED%95%98%EC%9D%B4%EB%B8%8C-%EA%B5%AC%EC%A1%B0-%EC%A0%95%EB%A6%AC.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="https://pragmob.github.io//forensic/2022/09/15/%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%82%B4-%EB%A0%88%EC%A7%80%EC%8A%A4%ED%8A%B8%EB%A6%AC-%ED%95%98%EC%9D%B4%EB%B8%8C-%EA%B5%AC%EC%A1%B0-%EC%A0%95%EB%A6%AC.html">
+	<link rel="alternate" type="application/rss+xml" title="플래그모의 리포지토리" href="https://pragmob.github.io//feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+
+  
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/logo.jpg" alt="플래그모의 리포지토리">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">메모리 내 레지스트리 하이브 구조 정리</h1>
+      <p class="info">by <strong>Pragmo</strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">September 15, 2022</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/forensic">Forensic</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <p>메모리 포렌식(혜지원)의 레지스트리 분석 파트에서 생략된 내용이 많아 관련 배경지식을 정리하고자 한다</p>
+
+<p>책 내용이 이해가 안돼서 10시간 이상 인터넷을 헤맸던 과거의 나에게 가르치는 느낌으로 글을 쓴다</p>
+
+<p>이 글의 모든 자료는 윈도우7 기준으로 작성되었다</p>
+
+<h1 id="레지스트리와-하이브">레지스트리와 하이브</h1>
+
+<p>아직 정확한 개념은 모르겠지만 레지스트리 편집기에서 보이는 경로의 루트키 바로 밑의 SYSTEM, SOFTWARE등을 하이브라고 부르는 것 같다</p>
+
+<p>%systemroot%\system32\config에 저장되어있다</p>
+
+<p>이러한 하이브들이 모여 레지스트리를 형성한다</p>
+
+<h1 id="메모리-안에서-레지스트리는-어떻게-저장되어있나">메모리 안에서 레지스트리는 어떻게 저장되어있나?</h1>
+
+<p><img src="/assets/posts/메모리 내 레지스트리 하이브 구조 정리/전체구조.jpg" alt="전체구조" /></p>
+
+<p>_CMHIVE구조의 하이브 객체가 커널 풀에 CM10 태그로 할당되어있다</p>
+
+<p>하이브 객체들끼리는 _LIST_ENTRY로 엮여있다</p>
+
+<p>하이브 객체 밑으로 Hive.Storage.Map이 가리키는 _HMAP_DIRECTORY구조의 Directory배열과</p>
+
+<p>Directory배열의 값들이 가리키는 _HMAP_TABLE구조의 Table배열이 보이는데</p>
+
+<p>메모리 포렌식 책의 레지스트리 파트에서 말하는 디렉터리와 테이블은 얘네들이다</p>
+
+<p>보다시피 Directory, Table멤버는 배열로 되어있다</p>
+
+<p>Table배열이 저장하는 _HMAP_ENTRY구조체에서 BlockAddress를 따라가면 키 정보, 서브키 리스트, 키 값 리스트들이 뒤죽박죽 섞여있는 블록을 확인할 수 있다</p>
+
+<p>이 블록 내부 하나하나의 키 정보, 서브키 리스트, 키 값 리스트 등을 셀(cell)이라고 한다</p>
+
+<p>BlockAdresss값은 당연히 가상 주소이다</p>
+
+<p>블록에 저장된 셀들을 통해 서브키 리스트, 키 값 등 원하는 정보를 추출할 수 있다</p>
+
+<p><img src="/assets/posts/메모리 내 레지스트리 하이브 구조 정리/CM_KEY_NODE.PNG" alt="_CM_KEY_NODE" /></p>
+
+<p>키 정보는 _CM_KEY_NODE이고 SubKeyLists의 값을 통해 서브키 리스트 구조를 찾아갈 수 있다</p>
+
+<p><img src="/assets/posts/메모리 내 레지스트리 하이브 구조 정리/CM_KEY_VALUE.PNG" alt="_CM_KEY_VALUE" /></p>
+
+<p>값을 저장하는 키(value key) 정보는 _CM_KEY_VALUE구조로 되어있다</p>
+
+<p><img src="/assets/posts/메모리 내 레지스트리 하이브 구조 정리/subkey-list_cell.png" alt="subkey-list_cell" /></p>
+
+<p>서브키 리스트는 일반적으로 이런 모양이고</p>
+
+<p><img src="/assets/posts/메모리 내 레지스트리 하이브 구조 정리/lf_lh_signature.png" alt="lf_lh_signature" /></p>
+
+<p>시그니처가 lf, lh일 경우 subkey list element에 이런 구조가 들어가게 된다</p>
+
+<p>KN Cell은 뒤에서 설명한 셀 인덱스 값이고 Hash는 서브키 이름의 해쉬값이다</p>
+
+<p><img src="/assets/posts/메모리 내 레지스트리 하이브 구조 정리/value-list_cell.png" alt="value-list_cell" /></p>
+
+<p>value key 리스트 구조는 이렇게 된다</p>
+
+<p>value key의 셀 인덱스 값이 쭉 나열되어 있다</p>
+
+<h1 id="셀-인덱스">셀 인덱스</h1>
+
+<p><img src="/assets/posts/메모리 내 레지스트리 하이브 구조 정리/cellindex_vmem.png" alt="그림_10-3" /><br />
+<strong>[그림 10-3]</strong></p>
+
+<p>셀 인덱스 유형의 데이터를 그림 10-3의 방식으로 분해할 수 있다</p>
+
+<p>그림 10-3에서 분해한 디렉터리 인덱스와 테이블 인덱스 값은 각각 Directory, Table배열의 인덱스 값이다</p>
+
+<p>디렉터리와 테이블을 알맞게 찾아간 이후엔 _HMAP_ENTRY의 BlockAddress에 오프셋을 더해 셀의 주소를 알아낸다</p>
+
+<h1 id="example">Example</h1>
+
+<p>배경지식을 토대로 레지스트리 키 값을 찾아가는 과정을 정리해보자</p>
+
+<p><mark>1. 첫번째로 시작점을 어떻게 찾아야 하는지 문제가 있다</mark></p>
+
+<p>구글에도 안나오고 그냥 혼자서 머리깨져가며 연구해본 내용이지만</p>
+
+<p>“하이브 디렉터리 0 테이블 0 오프셋 32에서 발견되는 _CM_KEY_NODE구조가 시작점인것 같다</p>
+
+<p>오프셋이 왜 32이냐면 오프셋 0에서 _HBIN이라는 헤더가 발견되는데 이게 32바이트이기 때문이다</p>
+
+<p>헤더 밑에는 무조건 _CM_KEY_NODE가 발견되는 것 같아서 SubKeyLists를 따라가보니</p>
+
+<p>볼라틸리티 printkey 플러그인으로 출력한 서브키와 내용이 일치해서 그렇지 않을까? 하고 추측한 사실이다</p>
+
+<p>해당 부분은 뇌피셜이니 진실이 궁금하다면 스스로 논문을 찾아보도록 하자</p>
+
+<p>어쨌거나 시작이 되는 _CM_KEY_NODE를 찾았다면</p>
+
+<p><mark>2. _CM_KEY_NODE구조의 SubKeyLists 값을 통해 서브키 리스트를 찾아간다</mark></p>
+
+<p>SubKeyLists배열의 값은 셀 인덱스이므로 위에서 작성한 셀 인덱스 분해방법을 참고한다</p>
+
+<p><mark>3. 서브키 리스트의 오프셋 값들을 찾아간다</mark></p>
+
+<p>이때 오프셋 값은 셀 인덱스이다</p>
+
+<p>해당 셀을 찾아가면 _CM_KEY_NODE구조가 나올 것이다</p>
+
+<p><mark>4. _CM_KEY_NODE구조의 Name을 참고해 내가 찾는 키가 맞는지 확인한다</mark></p>
+
+<p>맞으면 ㄱㄱ 틀리면 3으로 돌아감</p>
+
+<p><mark>5. 2로 돌아가서 다 도착할 때까지 서브키 계속 참조참조참조한다</mark></p>
+
+<p><mark>6. 끝까지 다 내려왔다. value list를 찾아간다</mark></p>
+
+<p>당신은 아마도 레지스트리 경로상으로 맨 아래에 있는 키(_CM_KEY_NODE구조)를 보고 있을 것이다</p>
+
+<p>ValueList멤버가 저장한 셀 인덱스가 가리키는 위치를 찾아가 value list cell을 만난다</p>
+
+<p><mark>7. value list의 오프셋 값들을 찾아간다</mark></p>
+
+<p>여기 오프셋도 마찬가지로 셀 인덱스이다</p>
+
+<p>찾아가면 _CM_KEY_VALUE구조가 나올 것이다</p>
+
+<p><mark>8. _CM_KEY_VALUE구조의 Name을 참고해 내가 찾는 키인지 확인한다</mark></p>
+
+<p>맞으면 통과 아니면 7로 돌아간다</p>
+
+<p><mark>9. _CM_KEY_VALUE구조의 Data 값을 참조해 값을 뽑아낸다</mark></p>
+
+<p>Data멤버도 역시 셀 인덱스이다</p>
+
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+      <a href="//twitter.com/share?text=%EB%A9%94%EB%AA%A8%EB%A6%AC+%EB%82%B4+%EB%A0%88%EC%A7%80%EC%8A%A4%ED%8A%B8%EB%A6%AC+%ED%95%98%EC%9D%B4%EB%B8%8C+%EA%B5%AC%EC%A1%B0+%EC%A0%95%EB%A6%AC&url=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2022%2F09%2F15%2F%25EB%25A9%2594%25EB%25AA%25A8%25EB%25A6%25AC-%25EB%2582%25B4-%25EB%25A0%2588%25EC%25A7%2580%25EC%258A%25A4%25ED%258A%25B8%25EB%25A6%25AC-%25ED%2595%2598%25EC%259D%25B4%25EB%25B8%258C-%25EA%25B5%25AC%25EC%25A1%25B0-%25EC%25A0%2595%25EB%25A6%25AC.html&via="
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=255');return false;">
+        <i class="fa fa-twitter-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+      <a href="//www.facebook.com/sharer.php?t=%EB%A9%94%EB%AA%A8%EB%A6%AC+%EB%82%B4+%EB%A0%88%EC%A7%80%EC%8A%A4%ED%8A%B8%EB%A6%AC+%ED%95%98%EC%9D%B4%EB%B8%8C+%EA%B5%AC%EC%A1%B0+%EC%A0%95%EB%A6%AC&u=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2022%2F09%2F15%2F%25EB%25A9%2594%25EB%25AA%25A8%25EB%25A6%25AC-%25EB%2582%25B4-%25EB%25A0%2588%25EC%25A7%2580%25EC%258A%25A4%25ED%258A%25B8%25EB%25A6%25AC-%25ED%2595%2598%25EC%259D%25B4%25EB%25B8%258C-%25EA%25B5%25AC%25EC%25A1%25B0-%25EC%25A0%2595%25EB%25A6%25AC.html"
+        onclick="window.open(this.href, 'facebook-share', 'width=550,height=255');return false;">
+        <i class="fa fa-facebook-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+      <a href="//www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2022%2F09%2F15%2F%25EB%25A9%2594%25EB%25AA%25A8%25EB%25A6%25AC-%25EB%2582%25B4-%25EB%25A0%2588%25EC%25A7%2580%25EC%258A%25A4%25ED%258A%25B8%25EB%25A6%25AC-%25ED%2595%2598%25EC%259D%25B4%25EB%25B8%258C-%25EA%25B5%25AC%25EC%25A1%25B0-%25EC%25A0%2595%25EB%25A6%25AC.html"
+        onclick="window.open(this.href, 'linkedin-share', 'width=550,height=255');return false;">
+        <i class="fa fa-linkedin-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=%EB%A9%94%EB%AA%A8%EB%A6%AC+%EB%82%B4+%EB%A0%88%EC%A7%80%EC%8A%A4%ED%8A%B8%EB%A6%AC+%ED%95%98%EC%9D%B4%EB%B8%8C+%EA%B5%AC%EC%A1%B0+%EC%A0%95%EB%A6%AC&url=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2022%2F09%2F15%2F%25EB%25A9%2594%25EB%25AA%25A8%25EB%25A6%25AC-%25EB%2582%25B4-%25EB%25A0%2588%25EC%25A7%2580%25EC%258A%25A4%25ED%258A%25B8%25EB%25A6%25AC-%25ED%2595%2598%25EC%259D%25B4%25EB%25B8%258C-%25EA%25B5%25AC%25EC%25A1%25B0-%25EC%25A0%2595%25EB%25A6%25AC.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+      <a href="//www.pinterest.com/pin/create/button/?description=%EB%A9%94%EB%AA%A8%EB%A6%AC+%EB%82%B4+%EB%A0%88%EC%A7%80%EC%8A%A4%ED%8A%B8%EB%A6%AC+%ED%95%98%EC%9D%B4%EB%B8%8C+%EA%B5%AC%EC%A1%B0+%EC%A0%95%EB%A6%AC&url=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2022%2F09%2F15%2F%25EB%25A9%2594%25EB%25AA%25A8%25EB%25A6%25AC-%25EB%2582%25B4-%25EB%25A0%2588%25EC%25A7%2580%25EC%258A%25A4%25ED%258A%25B8%25EB%25A6%25AC-%25ED%2595%2598%25EC%259D%25B4%25EB%25B8%258C-%25EA%25B5%25AC%25EC%25A1%25B0-%25EC%25A0%2595%25EB%25A6%25AC.html&media=https://pragmob.github.io//assets/logo.jpg"
+        onclick="window.open(this.href, 'pinterest-share', 'width=550,height=255');return false;">
+        <i class="fa fa-pinterest-square fa-lg"></i>
+      </a>
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+      <a href="//www.reddit.com/submit" onclick="window.location = '//www.reddit.com/submit?url=' + encodeURIComponent('https://pragmob.github.io//forensic/2022/09/15/%EB%A9%94%EB%AA%A8%EB%A6%AC-%EB%82%B4-%EB%A0%88%EC%A7%80%EC%8A%A4%ED%8A%B8%EB%A6%AC-%ED%95%98%EC%9D%B4%EB%B8%8C-%EA%B5%AC%EC%A1%B0-%EC%A0%95%EB%A6%AC.html') + '&title=메모리 내 레지스트리 하이브 구조 정리'; return false">
+        <i class="fa fa-reddit-square fa-lg"></i>
+      </a>
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+	<section class="post-navigation">
+		<span class="prev-post">
+			
+				<a href="/system_hacking/2021/11/15/pwnable.kr-fsb-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i>
+					</span>
+					<span class="page-number">pwnable.kr fsb 문제풀이</span>
+				</a>
+			
+		</span>
+		<span class="next-post">
+			
+				<a href="/forensic/2022/09/20/(%ED%8F%AC%EB%A0%8C%EC%8B%9D)%EC%86%8C%EC%BC%93%EC%9D%98-%EC%8B%A4%EC%B2%B4%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80.html">
+					<span class="page-number">(포렌식)소켓의 실체는 무엇인가?</span>
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i>
+					</span>
+				</a>
+			
+		</span>
+	</section>
+
+
+
+
+<!-- github comments -->
+<section class="github-comments">
+  <script src="https://utteranc.es/client.js"
+    repo="PragmoB/blog-comments"
+    issue-term="pathname"
+    theme="github-light"
+    crossorigin="anonymous"
+    async>
+  </script>
+</section>
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">플래그모의 리포지토리</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:peullaegeumo@gmail.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">peullaegeumo@gmail.com</span>
+          </a>
+        </li>
+
+        
+          
+        
+          
+        
+          
+          <li>
+            <a href="https://github.com/PragmoB" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">PragmoB</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text">공부하고 경험했던 내용들을 정리해서 올리고 있습니다. 어서오세요
+</p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>

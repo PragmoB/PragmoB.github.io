@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>백준 9252 LCS 2 문제풀이</title>
+  <meta name="description" content="개요">
+  
+  <meta name="author" content="Pragmo">
+  <meta name="copyright" content="&copy; Pragmo 2024">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="개요" />
+  <meta property="og:url" content="https://pragmob.github.io//ps/2024/12/18/%EB%B0%B1%EC%A4%80-9252-LCS-2-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+  <meta property="og:site_name" content="플래그모의 리포지토리" />
+  <meta property="og:title" content="백준 9252 LCS 2 문제풀이" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://pragmob.github.io//assets/logo.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="백준 9252 LCS 2 문제풀이">
+  <meta name="twitter:description" content="개요">
+  <meta name="twitter:image" content="https://pragmob.github.io//assets/logo.png">
+  <meta name="twitter:url" content="https://pragmob.github.io//ps/2024/12/18/%EB%B0%B1%EC%A4%80-9252-LCS-2-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="https://pragmob.github.io//ps/2024/12/18/%EB%B0%B1%EC%A4%80-9252-LCS-2-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+	<link rel="alternate" type="application/rss+xml" title="플래그모의 리포지토리" href="https://pragmob.github.io//feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        TeX: {
+          equationNumbers: {
+            autoNumber: "AMS"
+          }
+        },
+        tex2jax: {
+        inlineMath: [ ['$', '$'] ],
+        displayMath: [ ['$$', '$$'] ],
+        processEscapes: true,
+      }
+    });
+    MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+          alert("Math Processing Error: "+message[1]);
+        });
+    MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+          alert("Math Processing Error: "+message[1]);
+        });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+  
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/logo.jpg" alt="플래그모의 리포지토리">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">백준 9252 LCS 2 문제풀이</h1>
+      <p class="info">by <strong>Pragmo</strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">December 18, 2024</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/PS">Ps</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <h1 id="개요">개요</h1>
+
+<p>3달전에 싸지방에서 풀었던 문제인데 복습 차 다시 풀어보니 풀이법, 구현방법 등이 바로바로 생각나지 않아 정리의 필요성을 느끼게 되었다.</p>
+
+<h1 id="문제이해">문제이해</h1>
+
+<p>LCS 계산이 목적인 문제이다.</p>
+
+<p>여기서 LCS란 무엇이냐?</p>
+
+<blockquote>
+  <p>두 수열이 주어졌을때, 겹치는 부분 수열 중 가장 긴 놈</p>
+</blockquote>
+
+<p>을 의미한다.</p>
+
+<p>예를 들어, 두 수열 $S_1 = $ ACAYKP, $S_2 = $ CAPCAK에 대한 $LCS$는 아래와 같이 도출된다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>값</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$S_1$</td>
+      <td><span style="color:green; background-color:#fff5b1">ACA</span>Y<span style="color:green; background-color:#fff5b1">K</span>P</td>
+    </tr>
+    <tr>
+      <td>$S_2$</td>
+      <td>C<span style="color:green; background-color:#fff5b1">A</span>P<span style="color:green; background-color:#fff5b1">CAK</span></td>
+    </tr>
+    <tr>
+      <td>$LCS$</td>
+      <td><span style="color:green; background-color:#fff5b1">ACAK</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="입출력">입출력</h1>
+
+<p>두 줄에 걸쳐 수열 $S_1, S_2$가 주어진다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ACAYKP
+CAPCAK
+</code></pre></div></div>
+
+<p>첫째 줄에 $LCS$의 길이,</p>
+
+<p>둘째 줄에 $LCS$를 출력한다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4
+ACAK
+</code></pre></div></div>
+
+<h1 id="풀이">풀이</h1>
+
+<p>풀이에 앞서, 3개월 전의 나는 이런 접근을 했던 것으로 보인다.</p>
+
+<p>$LCS$는 주어진 수열 양쪽에 모두 숨어있다.</p>
+
+<p>그렇다면, 어느 한 쪽 수열로 만들 수 있는 모든 경우의 부분 수열을 만들어보고, 그 수열이 다른 한 쪽 수열의 부분수열이 되는지 체크, 이 중에서 가장 긴 놈을 선택하면 LCS를 구할 수 있을 것 같다.</p>
+
+<p>탐색 방법은 DFS, 글자 하나 당 선택지는 2개(부분 수열에 포함시킬지, 포함하지 않을지)이므로 연산 횟수는 최대 2의 1000제곱이다.</p>
+
+<p>즉, DFS 완전탐색을 돌리면 되겠구나! 라는 생각이다.</p>
+
+<p>하지만 2의 1000제곱이나 되는 연산횟수를 0.1초 안에 수행하기는 불가능이기 때문에 DP로 시간을 줄이는 방법을 고민했다.</p>
+
+<p>그래서 dp 배열을 아래와 같이 정의했다.</p>
+
+<pre><code class="language-C">int dp[1000][1000]; // dp[i][j] = S_1[i], S_2[j]부터 비교를 시작했을 때 LCS의 길이
+</code></pre>
+
+<p>DFS를 돌리며 dp배열을 채워나간다.</p>
+
+<p>dp값을 통해 LCS의 길이는 물론 LCS도 연산을 통해 도출할 수 있다.</p>
+
+<p>아래는 정답 코드</p>
+
+<pre><code class="language-C">#include &lt;iostream&gt;
+#include &lt;cstring&gt;
+
+#define MAX_LEN 1000
+
+using namespace std;
+
+char str1[MAX_LEN + 1], str2[MAX_LEN + 1];
+int len_str1, len_str2;
+// next_str2_idx_of[i][j] = str2에서 알파벳 (i + 0x41)를 j번 인덱스부터 찾았을 때 가장 가까운 인덱스
+int next_str2_idx_of['Z' - 'A' + 1][MAX_LEN + 1];
+// dp[i][j] = str1[i], str2[j] 부터 비교를 시작했을때 LCS len값
+int dp[MAX_LEN + 1][MAX_LEN + 1];
+
+int dfs(int depth = 0, int previous_str2_alphabet_idx = -1) {
+	static char neg_cs[MAX_LEN + 1];
+	
+	if (depth == len_str1)
+		return 0;
+	if (dp[depth][previous_str2_alphabet_idx + 1] != -1)
+		return dp[depth][previous_str2_alphabet_idx + 1];
+	
+	int ret = dfs(depth + 1, previous_str2_alphabet_idx);
+	if (dp[depth][previous_str2_alphabet_idx + 1] &lt; ret)
+		dp[depth][previous_str2_alphabet_idx + 1] = ret;
+
+	int next_idx = next_str2_idx_of[str1[depth] - 'A'][previous_str2_alphabet_idx + 1];
+	if (next_idx != -1) { // str2에 str1[depth] 알파벳이 존재했다면
+		ret = dfs(depth + 1, next_idx) + 1;
+		if (dp[depth][previous_str2_alphabet_idx + 1] &lt; ret)
+			dp[depth][previous_str2_alphabet_idx + 1] = ret;
+	}
+	
+	return dp[depth][previous_str2_alphabet_idx + 1];
+}
+int main() {
+	cin &gt;&gt; str1 &gt;&gt; str2;
+	len_str1 = strlen(str1);
+	len_str2 = strlen(str2);
+	
+	for (int i = 0; i &lt; 'Z' - 'A' + 1; i++)
+		for (int j = 0; j &lt; MAX_LEN + 1; j++)
+			next_str2_idx_of[i][j] = -1;
+	for (int i = 0; i &lt; MAX_LEN + 1; i++)
+		for (int j = 0; j &lt; MAX_LEN + 1; j++)
+			dp[i][j] = -1;
+	
+	// next_str2_idx_of 구성
+	for (int i = 0; i &lt; len_str2; i++) {
+		int alphabet = str2[i] - 'A';
+		for (int j = i; 0 &lt;= j; j--) {
+			if (next_str2_idx_of[alphabet][j] != -1)
+				break;
+			next_str2_idx_of[alphabet][j] = i;
+		}
+	}
+	
+	dfs();
+	
+	cout &lt;&lt; dp[0][0] &lt;&lt; endl;
+	for (int i = 0, previous_str2_alphabet_idx = -1; i &lt; len_str1; i++) {
+		int alphabet = str1[i] - 'A';
+		int matching_str2_idx = next_str2_idx_of[alphabet][previous_str2_alphabet_idx + 1];
+			
+		// str1[i]을 포함한 케이스가 존재하며 str1[i]를 포함한 케이스가 포함 안한 케이스보다 길이가 크다면
+		if (matching_str2_idx != -1 &amp;&amp; dp[i + 1][previous_str2_alphabet_idx + 1] &lt; 
+			dp[i + 1][matching_str2_idx + 1] + 1) {
+			// 이건 출력하는게 맞음
+			cout &lt;&lt; str1[i];
+			previous_str2_alphabet_idx = matching_str2_idx;
+		}
+	}
+	
+	return 0;
+}
+</code></pre>
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+      <a href="//twitter.com/share?text=%EB%B0%B1%EC%A4%80+9252+LCS+2+%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fps%2F2024%2F12%2F18%2F%25EB%25B0%25B1%25EC%25A4%2580-9252-LCS-2-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html&via="
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=255');return false;">
+        <i class="fa fa-twitter-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+      <a href="//www.facebook.com/sharer.php?t=%EB%B0%B1%EC%A4%80+9252+LCS+2+%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4&u=https%3A%2F%2Fpragmob.github.io%2F%2Fps%2F2024%2F12%2F18%2F%25EB%25B0%25B1%25EC%25A4%2580-9252-LCS-2-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html"
+        onclick="window.open(this.href, 'facebook-share', 'width=550,height=255');return false;">
+        <i class="fa fa-facebook-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+      <a href="//www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fpragmob.github.io%2F%2Fps%2F2024%2F12%2F18%2F%25EB%25B0%25B1%25EC%25A4%2580-9252-LCS-2-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html"
+        onclick="window.open(this.href, 'linkedin-share', 'width=550,height=255');return false;">
+        <i class="fa fa-linkedin-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=%EB%B0%B1%EC%A4%80+9252+LCS+2+%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fps%2F2024%2F12%2F18%2F%25EB%25B0%25B1%25EC%25A4%2580-9252-LCS-2-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+      <a href="//www.pinterest.com/pin/create/button/?description=%EB%B0%B1%EC%A4%80+9252+LCS+2+%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fps%2F2024%2F12%2F18%2F%25EB%25B0%25B1%25EC%25A4%2580-9252-LCS-2-%25EB%25AC%25B8%25EC%25A0%259C%25ED%2592%2580%25EC%259D%25B4.html&media=https://pragmob.github.io//assets/logo.jpg"
+        onclick="window.open(this.href, 'pinterest-share', 'width=550,height=255');return false;">
+        <i class="fa fa-pinterest-square fa-lg"></i>
+      </a>
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+      <a href="//www.reddit.com/submit" onclick="window.location = '//www.reddit.com/submit?url=' + encodeURIComponent('https://pragmob.github.io//ps/2024/12/18/%EB%B0%B1%EC%A4%80-9252-LCS-2-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html') + '&title=백준 9252 LCS 2 문제풀이'; return false">
+        <i class="fa fa-reddit-square fa-lg"></i>
+      </a>
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+	<section class="post-navigation">
+		<span class="prev-post">
+			
+				<a href="/ps/2023/02/06/%EB%B0%B1%EC%A4%80-%ED%8C%8C%EC%9D%B4%ED%94%84-%EC%98%AE%EA%B8%B0%EA%B8%B01(17070)-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i>
+					</span>
+					<span class="page-number">백준 파이프 옮기기1(17070) 문제풀이</span>
+				</a>
+			
+		</span>
+		<span class="next-post">
+			
+		</span>
+	</section>
+
+
+
+
+<!-- github comments -->
+<section class="github-comments">
+  <script src="https://utteranc.es/client.js"
+    repo="PragmoB/blog-comments"
+    issue-term="pathname"
+    theme="github-light"
+    crossorigin="anonymous"
+    async>
+  </script>
+</section>
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">플래그모의 리포지토리</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:peullaegeumo@gmail.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">peullaegeumo@gmail.com</span>
+          </a>
+        </li>
+
+        
+          
+        
+          
+        
+          
+          <li>
+            <a href="https://github.com/PragmoB" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">PragmoB</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text">공부하고 경험했던 내용들을 정리해서 올리고 있습니다. 어서오세요
+</p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>

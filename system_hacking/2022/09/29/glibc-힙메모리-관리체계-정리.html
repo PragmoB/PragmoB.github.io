@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>glibc 힙메모리 관리체계 정리</title>
+  <meta name="description" content="소개">
+  
+  <meta name="author" content="Pragmo">
+  <meta name="copyright" content="&copy; Pragmo 2024">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="소개" />
+  <meta property="og:url" content="https://pragmob.github.io//system_hacking/2022/09/29/glibc-%ED%9E%99%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC%EC%B2%B4%EA%B3%84-%EC%A0%95%EB%A6%AC.html">
+  <meta property="og:site_name" content="플래그모의 리포지토리" />
+  <meta property="og:title" content="glibc 힙메모리 관리체계 정리" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://pragmob.github.io//assets/logo.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="glibc 힙메모리 관리체계 정리">
+  <meta name="twitter:description" content="소개">
+  <meta name="twitter:image" content="https://pragmob.github.io//assets/logo.png">
+  <meta name="twitter:url" content="https://pragmob.github.io//system_hacking/2022/09/29/glibc-%ED%9E%99%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC%EC%B2%B4%EA%B3%84-%EC%A0%95%EB%A6%AC.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="https://pragmob.github.io//system_hacking/2022/09/29/glibc-%ED%9E%99%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC%EC%B2%B4%EA%B3%84-%EC%A0%95%EB%A6%AC.html">
+	<link rel="alternate" type="application/rss+xml" title="플래그모의 리포지토리" href="https://pragmob.github.io//feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+
+  
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/logo.jpg" alt="플래그모의 리포지토리">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">glibc 힙메모리 관리체계 정리</h1>
+      <p class="info">by <strong>Pragmo</strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">September 29, 2022</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/system_hacking">System_hacking</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <h1 id="소개">소개</h1>
+
+<p>힙메모리 취약점을 공부하기 앞서 필요한 내용.</p>
+
+<p>내용이 복잡하고 처음 공부했을때 이해가 어려웠던 경험이 있어 직접 정리하고자 한다</p>
+
+<p>힙메모리는 처음엔 Top Chunk라고 불리는 거대한 메모리 덩어리가 있다</p>
+
+<p>여기서 malloc으로 힙메모리를 할당받게 되면 이 Top Chunk에서 공간을 잘라서 준다</p>
+
+<p>크기는 32비트의 경우에 8바이트, 64비트의 경우에 0x10바이트 단위로 할당이 된다</p>
+
+<p>malloc(0x11)을 했어도 메모리 블록은 32비트에서 0x18바이트, 64비트에서 0x20바이트로 할당이 된다는 소리다</p>
+
+<p>이렇게 할당을 막 받다가 나중에 메모리를 할당해제 한다고 생각해보자</p>
+
+<p>그렇다면 어떻게 해야 효율적으로 관리를 할 수 있겠는가?</p>
+
+<p>제일 좋은 방법은 근처의 할당되지 않은 메모리 블록과 병합하는 것이다</p>
+
+<p><img src="/assets/posts/glibc 힙메모리 관리체계 정리/간단한 경우.png" alt="간단한 경우" /></p>
+
+<p>이런 경우처럼 말이다</p>
+
+<p>Chunk0을 할당해제 할 경우 인접해 있는 Top Chunk와 병합하면 된다</p>
+
+<p>그러나 메모리를 쓰다보면 이렇게 간단한 경우만 생기지는 않는다</p>
+
+<p><img src="/assets/posts/glibc 힙메모리 관리체계 정리/복잡한 경우.png" alt="복잡한 경우" /></p>
+
+<p>여기서 Chunk1을 할당 해제하는 경우 인접한 메모리와 병합하기 힘들다</p>
+
+<p>인접한 Chunk들이 사용중이기 때문이다</p>
+
+<p>그러다 엔지니어들이 고민해서 나온게 bin이라는 구조다</p>
+
+<p>사용중이던 Chunk가 할당해제 되면 같은 크기의 Chunk끼리 묶여서 bin이라는 구조체에 linked list로 연결되서 들어가게 된다</p>
+
+<pre><code class="language-C">void* Chunk0 = malloc(0x15);
+void* Chunk1 = malloc(0x16);
+void* Chunk2 = malloc(0x17);
+
+void* Chunk3 = malloc(0x25);
+void* Chunk4 = malloc(0x26);
+void* Chunk5 = malloc(0x27);
+
+void* dummy = malloc(0x15);
+
+free(Chunk0);
+free(Chunk1);
+free(Chunk2);
+
+free(Chunk3);
+free(Chunk4);
+free(Chunk5);
+</code></pre>
+
+<p>예를 들어 이렇게 사용했을 경우</p>
+
+<p><img src="/assets/posts/glibc 힙메모리 관리체계 정리/bin list.png" alt="bin list" /></p>
+
+<p>메모리에서는 이런식으로 연결이 구성이 된다는 말이다</p>
+
+<p>그 후 같은 크기의 메모리 할당요청이 들어오게 되면 bin에 연결된 Chunk를 꺼내서 준다</p>
+
+<p>그러니까 재활용같은 느낌으로 이해하면 된다</p>
+
+<p>쓰레기통(bin)에 넣었다가 나중에 필요할 때 꺼내쓰는 느낌으로 관리를 하게 된다</p>
+
+<h1 id="본론">본론</h1>
+
+<p>이렇게 bin에 들어가는 Chunk들은 크기에 따라 fast chunk, small chunk, big chunk로 분류가 된다</p>
+
+<p><img src="/assets/posts/glibc 힙메모리 관리체계 정리/chunk type.png" alt="chunk type" /></p>
+
+<p>Chunk의 종류에 따라서도 들어가는 bin이 달라질 수가 있는데</p>
+
+<p>bin도 종류가 unsorted bin, fastbin, smallbin 등 여러가지가 있다</p>
+
+<p><img src="/assets/posts/glibc 힙메모리 관리체계 정리/bin type.png" alt="bin type" /></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"> </th>
+      <th style="text-align: center">fastbin</th>
+      <th style="text-align: center">smallbin</th>
+      <th style="text-align: center">largebin</th>
+      <th style="text-align: center">unsorted bin</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">자료구조</td>
+      <td style="text-align: center">single linked list</td>
+      <td style="text-align: center">double linked list</td>
+      <td style="text-align: center">double linked list</td>
+      <td style="text-align: center">double linked list</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">IO방식</td>
+      <td style="text-align: center">LIFO</td>
+      <td style="text-align: center">FIFO</td>
+      <td style="text-align: center">?</td>
+      <td style="text-align: center">FIFO</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>보다시피 Chunk의 종류에 따라서 관리체계가 조금씩 다르다</p>
+
+<p>찾아보면서 알게 된 내용인데, 이론적으로 나와있는 것과 실제 내용이 조금 다른 것같다</p>
+
+<p>fastbin의 경우엔 자료에 나와있는 chunk의 최대 사이즈는 0xb0이라고 하는데 실제로는 0x80까지만 들이는 것 같고</p>
+
+<p>그것도 아키텍처 따라 다르고 문서마다 말하는 내용이 다르고 한거 같아서 사이즈 관련해서는 정확한 내용을 모르겠다</p>
+
+<p><strong>여기에 서술된 사이즈 값은 틀릴 수도 있음</strong></p>
+
+<p>small chunk와 large chunk의 경우에는 무조건 unsorted bin을 먼저 거친 후 들어가게 되는데,</p>
+
+<p>unsorted bin은 bin구조체가 하나밖에 없기에 보통의 경우와는 다르게 크기가 다른 Chunk들이 같은 리스트로 관리가 된다</p>
+
+<p>여기서 Chunk를 하나 꺼내게 되면 꺼내기 까지 검색한 Chunk를 종류에 따라 smallbin과 largebin으로 맞춰서 넣게 되는 것이다</p>
+
+<p>말이 어려우니 그림으로 보자</p>
+
+<pre><code class="language-C">void* Chunk0 = malloc(0xc5); // small chunk
+void* Chunk1 = malloc(0xc5); // small chunk
+void* Chunk2 = malloc(0xd5); // small chunk
+void* Chunk3 = malloc(0x415); // large chunk
+void* dummy = malloc(0x20);
+
+free(Chunk3);
+free(Chunk2);
+free(Chunk1);
+free(Chunk0);
+</code></pre>
+
+<p>코드 실행 후 unsorted bin에 다음과 같이 연결이 된다</p>
+
+<p><img src="/assets/posts/glibc 힙메모리 관리체계 정리/unsorted bin ex1.png" alt="unsorted bin ex1" /></p>
+
+<p>이 상태에서 <code class="language-plaintext highlighter-rouge">malloc(0xc5)</code>를 실행하면 구조가 다음과 같이 바뀐다</p>
+
+<p><img src="/assets/posts/glibc 힙메모리 관리체계 정리/unsorted bin ex2.png" alt="unsorted bin ex2" /></p>
+
+<p>FIFO 규칙에 따라 Chunk1이 검색돼서 재활용하고, 검색과정에서 만난 Chunk2와 Chunk3는 알맞은 빈으로 들어갔다</p>
+
+<p>여기까지만 이해해도 끝이었으나…</p>
+
+<h1 id="tcache-bin의-등장">tcache bin의 등장</h1>
+
+<p>glibc 2.26부터 tcache라는 bin이 추가되었다</p>
+
+<p>특징점으로</p>
+
+<ol>
+  <li>0x20 ~ 0x3f0바이트 크기의 Chunk를 대상으로</li>
+  <li>삽입, 재활용 우선순위가 제일 높고</li>
+  <li>리스트 당 7개까지만 들어가며</li>
+  <li>single linked list구조로</li>
+  <li>LIFO 방식,</li>
+  <li>fastbin또는 smallbin에서 Chunk를 재활용할 때 tcache bin이 비어있으면 남아있는 Chunk들을 tcache bin으로 옮긴다</li>
+</ol>
+
+<h1 id="결론">결론</h1>
+
+<p>지금까지의 내용들을 토대로 free된 Chunk가 bin에 들어가게 되는 경로를 다이어그램으로 정리해보면 이렇게 된다</p>
+
+<p><img src="/assets/posts/glibc 힙메모리 관리체계 정리/총정리.png" alt="총정리" /></p>
+
+<p>2시간동안 직접 만들었다</p>
+
+<p>오개념 지적 감사히 받습니다</p>
+
+<h1 id="참고문헌">참고문헌</h1>
+
+<p><a href="https://jeongzero.oopy.io/2c5b7648-5f96-42c4-8366-300e7b5ebac4">heap기초</a></p>
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+      <a href="//twitter.com/share?text=glibc+%ED%9E%99%EB%A9%94%EB%AA%A8%EB%A6%AC+%EA%B4%80%EB%A6%AC%EC%B2%B4%EA%B3%84+%EC%A0%95%EB%A6%AC&url=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2022%2F09%2F29%2Fglibc-%25ED%259E%2599%25EB%25A9%2594%25EB%25AA%25A8%25EB%25A6%25AC-%25EA%25B4%2580%25EB%25A6%25AC%25EC%25B2%25B4%25EA%25B3%2584-%25EC%25A0%2595%25EB%25A6%25AC.html&via="
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=255');return false;">
+        <i class="fa fa-twitter-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+      <a href="//www.facebook.com/sharer.php?t=glibc+%ED%9E%99%EB%A9%94%EB%AA%A8%EB%A6%AC+%EA%B4%80%EB%A6%AC%EC%B2%B4%EA%B3%84+%EC%A0%95%EB%A6%AC&u=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2022%2F09%2F29%2Fglibc-%25ED%259E%2599%25EB%25A9%2594%25EB%25AA%25A8%25EB%25A6%25AC-%25EA%25B4%2580%25EB%25A6%25AC%25EC%25B2%25B4%25EA%25B3%2584-%25EC%25A0%2595%25EB%25A6%25AC.html"
+        onclick="window.open(this.href, 'facebook-share', 'width=550,height=255');return false;">
+        <i class="fa fa-facebook-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+      <a href="//www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2022%2F09%2F29%2Fglibc-%25ED%259E%2599%25EB%25A9%2594%25EB%25AA%25A8%25EB%25A6%25AC-%25EA%25B4%2580%25EB%25A6%25AC%25EC%25B2%25B4%25EA%25B3%2584-%25EC%25A0%2595%25EB%25A6%25AC.html"
+        onclick="window.open(this.href, 'linkedin-share', 'width=550,height=255');return false;">
+        <i class="fa fa-linkedin-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=glibc+%ED%9E%99%EB%A9%94%EB%AA%A8%EB%A6%AC+%EA%B4%80%EB%A6%AC%EC%B2%B4%EA%B3%84+%EC%A0%95%EB%A6%AC&url=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2022%2F09%2F29%2Fglibc-%25ED%259E%2599%25EB%25A9%2594%25EB%25AA%25A8%25EB%25A6%25AC-%25EA%25B4%2580%25EB%25A6%25AC%25EC%25B2%25B4%25EA%25B3%2584-%25EC%25A0%2595%25EB%25A6%25AC.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+      <a href="//www.pinterest.com/pin/create/button/?description=glibc+%ED%9E%99%EB%A9%94%EB%AA%A8%EB%A6%AC+%EA%B4%80%EB%A6%AC%EC%B2%B4%EA%B3%84+%EC%A0%95%EB%A6%AC&url=https%3A%2F%2Fpragmob.github.io%2F%2Fsystem_hacking%2F2022%2F09%2F29%2Fglibc-%25ED%259E%2599%25EB%25A9%2594%25EB%25AA%25A8%25EB%25A6%25AC-%25EA%25B4%2580%25EB%25A6%25AC%25EC%25B2%25B4%25EA%25B3%2584-%25EC%25A0%2595%25EB%25A6%25AC.html&media=https://pragmob.github.io//assets/logo.jpg"
+        onclick="window.open(this.href, 'pinterest-share', 'width=550,height=255');return false;">
+        <i class="fa fa-pinterest-square fa-lg"></i>
+      </a>
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+      <a href="//www.reddit.com/submit" onclick="window.location = '//www.reddit.com/submit?url=' + encodeURIComponent('https://pragmob.github.io//system_hacking/2022/09/29/glibc-%ED%9E%99%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC%EC%B2%B4%EA%B3%84-%EC%A0%95%EB%A6%AC.html') + '&title=glibc 힙메모리 관리체계 정리'; return false">
+        <i class="fa fa-reddit-square fa-lg"></i>
+      </a>
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+	<section class="post-navigation">
+		<span class="prev-post">
+			
+				<a href="/forensic/2022/09/22/%EB%A9%94%EB%AA%A8%EB%A6%AC-%ED%8F%AC%EB%A0%8C%EC%8B%9D-1%EB%8F%85-%ED%9B%84-%EA%B3%84%ED%9A%8D.html">
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i>
+					</span>
+					<span class="page-number">메모리 포렌식 1독 후 계획</span>
+				</a>
+			
+		</span>
+		<span class="next-post">
+			
+				<a href="/system_hacking/2022/10/03/%EA%B7%B8%EB%A6%BC%EC%9C%BC%EB%A1%9C-%EC%89%BD%EA%B2%8C-%EB%B3%B4%EB%8A%94-tcache-stashing-unlink-attack.html">
+					<span class="page-number">그림으로 쉽게 보는 tcache stashing unlink attack</span>
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i>
+					</span>
+				</a>
+			
+		</span>
+	</section>
+
+
+
+
+<!-- github comments -->
+<section class="github-comments">
+  <script src="https://utteranc.es/client.js"
+    repo="PragmoB/blog-comments"
+    issue-term="pathname"
+    theme="github-light"
+    crossorigin="anonymous"
+    async>
+  </script>
+</section>
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">플래그모의 리포지토리</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:peullaegeumo@gmail.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">peullaegeumo@gmail.com</span>
+          </a>
+        </li>
+
+        
+          
+        
+          
+        
+          
+          <li>
+            <a href="https://github.com/PragmoB" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">PragmoB</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text">공부하고 경험했던 내용들을 정리해서 올리고 있습니다. 어서오세요
+</p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>

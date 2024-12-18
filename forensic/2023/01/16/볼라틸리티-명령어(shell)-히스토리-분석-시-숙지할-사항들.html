@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>볼라틸리티 명령어(shell) 히스토리 분석 시 숙지할 사항들</title>
+  <meta name="description" content="cmdscan">
+  
+  <meta name="author" content="Pragmo">
+  <meta name="copyright" content="&copy; Pragmo 2024">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="cmdscan" />
+  <meta property="og:url" content="https://pragmob.github.io//forensic/2023/01/16/%EB%B3%BC%EB%9D%BC%ED%8B%B8%EB%A6%AC%ED%8B%B0-%EB%AA%85%EB%A0%B9%EC%96%B4(shell)-%ED%9E%88%EC%8A%A4%ED%86%A0%EB%A6%AC-%EB%B6%84%EC%84%9D-%EC%8B%9C-%EC%88%99%EC%A7%80%ED%95%A0-%EC%82%AC%ED%95%AD%EB%93%A4.html">
+  <meta property="og:site_name" content="플래그모의 리포지토리" />
+  <meta property="og:title" content="볼라틸리티 명령어(shell) 히스토리 분석 시 숙지할 사항들" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://pragmob.github.io//assets/logo.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="볼라틸리티 명령어(shell) 히스토리 분석 시 숙지할 사항들">
+  <meta name="twitter:description" content="cmdscan">
+  <meta name="twitter:image" content="https://pragmob.github.io//assets/logo.png">
+  <meta name="twitter:url" content="https://pragmob.github.io//forensic/2023/01/16/%EB%B3%BC%EB%9D%BC%ED%8B%B8%EB%A6%AC%ED%8B%B0-%EB%AA%85%EB%A0%B9%EC%96%B4(shell)-%ED%9E%88%EC%8A%A4%ED%86%A0%EB%A6%AC-%EB%B6%84%EC%84%9D-%EC%8B%9C-%EC%88%99%EC%A7%80%ED%95%A0-%EC%82%AC%ED%95%AD%EB%93%A4.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="https://pragmob.github.io//forensic/2023/01/16/%EB%B3%BC%EB%9D%BC%ED%8B%B8%EB%A6%AC%ED%8B%B0-%EB%AA%85%EB%A0%B9%EC%96%B4(shell)-%ED%9E%88%EC%8A%A4%ED%86%A0%EB%A6%AC-%EB%B6%84%EC%84%9D-%EC%8B%9C-%EC%88%99%EC%A7%80%ED%95%A0-%EC%82%AC%ED%95%AD%EB%93%A4.html">
+	<link rel="alternate" type="application/rss+xml" title="플래그모의 리포지토리" href="https://pragmob.github.io//feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+
+  
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/logo.jpg" alt="플래그모의 리포지토리">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">볼라틸리티 명령어(shell) 히스토리 분석 시 숙지할 사항들</h1>
+      <p class="info">by <strong>Pragmo</strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">January 16, 2023</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/forensic">Forensic</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <h1 id="cmdscan">cmdscan</h1>
+
+<p>입력되었던 명령어(쉘)의 흔적들을 메모리 덤프에서 찾아내 복구해주는 볼라틸리티의 플러그인이다</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:\Users\user\Documents\유틸\volatility-2.6.1&gt;python vol.py -f Target1.vmss --profile=Win7SP1x86 cmdscan
+Volatility Foundation Volatility Framework 2.6.1
+**************************************************
+CommandProcess: conhost.exe Pid: 916
+CommandHistory: 0x2f9098 Application: cmd.exe Flags: Allocated, Reset
+CommandCount: 5 LastAdded: 4 LastDisplayed: 4
+FirstCommand: 0 CommandCountMax: 50
+ProcessHandle: 0x5c
+Cmd #0 @ 0x2efe98: cd ..
+Cmd #1 @ 0x2efeb0: cd Temp
+Cmd #2 @ 0x2f58a0: dir
+Cmd #3 @ 0x2f6bb8: wce.exe -w
+Cmd #4 @ 0x2fe400: wce.exe -w &gt; w.tmp
+Cmd #36 @ 0x2c00c4: -?0?,???,
+Cmd #37 @ 0x2f6008: 0?-???????/
+**************************************************
+CommandProcess: conhost.exe Pid: 1624
+CommandHistory: 0x1c0ab0 Application: cmd.exe Flags: Allocated
+CommandCount: 0 LastAdded: -1 LastDisplayed: -1
+FirstCommand: 0 CommandCountMax: 50
+ProcessHandle: 0x64
+Cmd #36 @ 0x1900c4: ?????
+Cmd #37 @ 0x1900c4: ?????
+**************************************************
+CommandProcess: conhost.exe Pid: 676
+CommandHistory: 0x349ff8 Application: cmd.exe Flags: Allocated, Reset
+CommandCount: 5 LastAdded: 4 LastDisplayed: 4
+FirstCommand: 0 CommandCountMax: 50
+ProcessHandle: 0x5c
+Cmd #0 @ 0x33fe58: cd ..
+Cmd #1 @ 0x33fe70: cd Temp
+Cmd #2 @ 0x3477a8: wce.exe -w
+Cmd #3 @ 0x3487b8: runas /profile /user:Administrator
+Cmd #4 @ 0x34e500: runas /profile /user:Administrator cmd
+Cmd #6 @ 0x340034: ??????
+Cmd #14 @ 0x330038: ?63?
+Cmd #36 @ 0x3100c4: 4?5?1???1
+Cmd #37 @ 0x346be8: 5?1??E????4
+**************************************************
+CommandProcess: conhost.exe Pid: 1824
+CommandHistory: 0x2d90d0 Application: cmd.exe Flags: Allocated, Reset
+CommandCount: 5 LastAdded: 4 LastDisplayed: 4
+FirstCommand: 0 CommandCountMax: 50
+ProcessHandle: 0x60
+Cmd #0 @ 0x2cfe88: cd ..
+Cmd #1 @ 0x2cfea0: cd Temp
+Cmd #2 @ 0x2d6de0: dir
+Cmd #3 @ 0x2d67f0: wce.exe -w
+Cmd #4 @ 0x2bbc10: wce.exe -w &gt; w.tmp
+Cmd #12 @ 0x2d0031: S
+Cmd #17 @ 0x2d0037: ??????
+Cmd #36 @ 0x2a00c4: -?.?*???*
+Cmd #37 @ 0x2d5c28: .?-???????-
+</code></pre></div></div>
+
+<p>사용하게 되면 위와 같이 입력된 명령어들이 순서대로 정렬되서 나온다</p>
+
+<p>이를 통해 침해 사고의 전개 과정을 파악하는데 도움이 되는 단서들을 얻어낼 수 있다</p>
+
+<h2 id="consoles">consoles</h2>
+
+<p>cmdscan의 상위호환으로 consoles 플러그인이 있다</p>
+
+<p>입력된 명령어 뿐만 아니라 출력 결과까지 포함해 제공한다</p>
+
+<p>그래서 개인적으로 cmdscan 잘 안쓰게 되더라</p>
+
+<h1 id="동작-원리">동작 원리</h1>
+
+<p>콘솔 프로그램은 보통 사용자와 소통하기 위한 인터페이스를 스스로는 가지고 있지 않기 때문에, 이러한 역할을 타 gui 프로세스에 대신 위탁하게 된다</p>
+
+<p>그 역할을 맡아서 입출력을 처리할 콘솔 창을 제공해주는 프로세스가 바로 conhost.exe이다</p>
+
+<p>아무것도 없는 상태에서 콘솔 프로그램이 실행될 경우에 conhost.exe는 그 자식 프로세스로 실행되지만, 그 다음부터는 conhost.exe를 여럿이 공유하며 쓸 수 있다</p>
+
+<p>아래는 이를 가장 흔하게 접해볼 수 있는 상황의 예시이다</p>
+
+<p><img src="/assets/posts/볼라틸리티%20명령어(shell)%20히스토리%20분석%20시%20숙지할%20사항들/conhost 공유.png" alt="conhost 공유" /></p>
+
+<p>cmd.exe 3개가 하나의 conhost.exe에 연결되어 돌아가고 있다</p>
+
+<p>여기서 최상단에 있는 cmd.exe를 죽이면 conhost.exe는 어떻게 될까?</p>
+
+<p><img src="/assets/posts/볼라틸리티%20명령어(shell)%20히스토리%20분석%20시%20숙지할%20사항들/conhost 공유2.png" alt="conhost 공유2" /></p>
+
+<p>결과는 부모가 없는 채로 남아있게 된다</p>
+
+<p>그럼 여기서 cmd.exe를 한 번 더 죽이면 어떻게 될까?</p>
+
+<p><img src="/assets/posts/볼라틸리티%20명령어(shell)%20히스토리%20분석%20시%20숙지할%20사항들/conhost 공유3.png" alt="conhost 공유3" /></p>
+
+<p>여전히 남아있다</p>
+
+<p>남아있는 cmd.exe를 죽이면 그제서야 콘솔 창이 꺼지며 conhost.exe도 죽는다</p>
+
+<p>즉 conhost.exe는 연결된 콘솔 프로그램들이 다 죽어야 죽는다</p>
+
+<p>콘솔 창을 닫는 경우는 어떨까?</p>
+
+<p>이 경우 conhost.exe 내부적으로 TerminateProcess를 호출해 연결된 콘솔 프로그램들을 죽임을 디버거를 통해 확인했다</p>
+
+<p>콘솔 프로그램과 conhost.exe는 이런식으로 운명을 함께한다<sup><a href="#footnote1">부연설명1</a></sup></p>
+
+<p>콘솔 프로그램과 conhost.exe는 또한 통신을 위해 디바이스 오브젝트를 사용하는데, 이 디바이스 오브젝트가 바로 입력 버퍼와 출력 버퍼이다</p>
+
+<p>따라서 콘솔 프로그램이 printf로 출력 버퍼에 문자열 값을 쓰면, conhost.exe는 이를 읽어들여 콘솔 창에 문자열을 그리는 그래픽적인 부분을 처리한다</p>
+
+<p>예시로 HelloWorld.exe가 Hello World를 출력하는 경우를 생각해보자</p>
+
+<p><img src="/assets/posts/볼라틸리티%20명령어(shell)%20히스토리%20분석%20시%20숙지할%20사항들/HelloWorld 출력.png" alt="HelloWorld 출력" /></p>
+
+<p>HelloWorld.exe는 글자를 출력할 그래픽 UI를 가지고 있지 않기 때문에, 해당 부분은 연결된 conhost.exe가 대신 처리 해준다</p>
+
+<p>또한 conhost.exe와 부모-자식 관계임을 확인할 수 있다</p>
+
+<p>Hello World라는 문자열이 출력되기까지 과정도 정리해보면 이렇게 된다</p>
+
+<ol>
+  <li>HelloWorld.exe에서 “Hello World!”를 printf하면</li>
+  <li>출력 버퍼에 “Hello World!”를 쓴다</li>
+  <li>conhost.exe에서 출력 버퍼를 읽어들여 “Hello World!”를 콘솔 창에 그린다</li>
+</ol>
+
+<p>여기까지 콘솔 프로그램에 따라오는 conhost.exe에 관해 자세히 알아봤는데, 이를 설명한 이유는 cmdscan과 consoles 플러그인은 conhost.exe의 메모리 내부에 남아있는 입출력 흔적을 분석해 결과를 내기 때문이다</p>
+
+<p>다음 그림은 분석에 필요한 conhost.exe 내부 입출력 데이터들의 구조를 나타낸다</p>
+
+<p><img src="/assets/posts/볼라틸리티%20명령어(shell)%20히스토리%20분석%20시%20숙지할%20사항들/커맨드 자료 구조.png" alt="커맨드 자료 구조" /><sup><a href="#footnote2">부연설명2</a></sup></p>
+
+<p>conhost.exe의 _gConsoleInformation 심볼에서 _CONSOLE_INFORMATION 구조를 가리키고, 여기서 커맨드 입력 기록과 출력 기록의 리스트를 가리킨다</p>
+
+<p>즉 윈도우 운영체제가 shell history를 기록하는 기능이 있어서 그걸 분석하는게 아니라, 콘솔에 입력되고 출력되고 한 내용을 자체 필터링을 조금 거쳐서 보여줄 뿐이다</p>
+
+<h1 id="주의사항">주의사항</h1>
+
+<p>그렇기 때문에 볼라틸리티의 cmdscan과 consoles 플러그인은 다음과 같은 한계가 존재한다</p>
+
+<ol>
+  <li>출력된 내용이 부정확하거나 빠진 부분이 있을 우려가 있고</li>
+  <li>명령어를 입력한 콘솔이 죽는다면 복구하기 여려워진다는 단점이 있다</li>
+</ol>
+
+<p>숙지하고 잘 쓴다면 좋은 결과를 얻어낼 수 있을 것 같다</p>
+
+<h1 id="각주">각주</h1>
+
+<p><b id="footnote1">부연설명1</b> : 다만 conhost.exe를 직접적으로 죽이는 경우는 해당사항 없음</p>
+
+<p><b id="footnote2">부연설명2</b> : win7 이전 버전에서는 conhost.exe가 아니라 csrss.exe가 그 역할을 담당하긴 했지만, win7 이전 버전을 쓰는 경우는 거의 없을테니 그림의 csrss.exe는 무시하도록 하자</p>
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+      <a href="//twitter.com/share?text=%EB%B3%BC%EB%9D%BC%ED%8B%B8%EB%A6%AC%ED%8B%B0+%EB%AA%85%EB%A0%B9%EC%96%B4%28shell%29+%ED%9E%88%EC%8A%A4%ED%86%A0%EB%A6%AC+%EB%B6%84%EC%84%9D+%EC%8B%9C+%EC%88%99%EC%A7%80%ED%95%A0+%EC%82%AC%ED%95%AD%EB%93%A4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2023%2F01%2F16%2F%25EB%25B3%25BC%25EB%259D%25BC%25ED%258B%25B8%25EB%25A6%25AC%25ED%258B%25B0-%25EB%25AA%2585%25EB%25A0%25B9%25EC%2596%25B4%28shell%29-%25ED%259E%2588%25EC%258A%25A4%25ED%2586%25A0%25EB%25A6%25AC-%25EB%25B6%2584%25EC%2584%259D-%25EC%258B%259C-%25EC%2588%2599%25EC%25A7%2580%25ED%2595%25A0-%25EC%2582%25AC%25ED%2595%25AD%25EB%2593%25A4.html&via="
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=255');return false;">
+        <i class="fa fa-twitter-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+      <a href="//www.facebook.com/sharer.php?t=%EB%B3%BC%EB%9D%BC%ED%8B%B8%EB%A6%AC%ED%8B%B0+%EB%AA%85%EB%A0%B9%EC%96%B4%28shell%29+%ED%9E%88%EC%8A%A4%ED%86%A0%EB%A6%AC+%EB%B6%84%EC%84%9D+%EC%8B%9C+%EC%88%99%EC%A7%80%ED%95%A0+%EC%82%AC%ED%95%AD%EB%93%A4&u=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2023%2F01%2F16%2F%25EB%25B3%25BC%25EB%259D%25BC%25ED%258B%25B8%25EB%25A6%25AC%25ED%258B%25B0-%25EB%25AA%2585%25EB%25A0%25B9%25EC%2596%25B4%28shell%29-%25ED%259E%2588%25EC%258A%25A4%25ED%2586%25A0%25EB%25A6%25AC-%25EB%25B6%2584%25EC%2584%259D-%25EC%258B%259C-%25EC%2588%2599%25EC%25A7%2580%25ED%2595%25A0-%25EC%2582%25AC%25ED%2595%25AD%25EB%2593%25A4.html"
+        onclick="window.open(this.href, 'facebook-share', 'width=550,height=255');return false;">
+        <i class="fa fa-facebook-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+      <a href="//www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2023%2F01%2F16%2F%25EB%25B3%25BC%25EB%259D%25BC%25ED%258B%25B8%25EB%25A6%25AC%25ED%258B%25B0-%25EB%25AA%2585%25EB%25A0%25B9%25EC%2596%25B4%28shell%29-%25ED%259E%2588%25EC%258A%25A4%25ED%2586%25A0%25EB%25A6%25AC-%25EB%25B6%2584%25EC%2584%259D-%25EC%258B%259C-%25EC%2588%2599%25EC%25A7%2580%25ED%2595%25A0-%25EC%2582%25AC%25ED%2595%25AD%25EB%2593%25A4.html"
+        onclick="window.open(this.href, 'linkedin-share', 'width=550,height=255');return false;">
+        <i class="fa fa-linkedin-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=%EB%B3%BC%EB%9D%BC%ED%8B%B8%EB%A6%AC%ED%8B%B0+%EB%AA%85%EB%A0%B9%EC%96%B4%28shell%29+%ED%9E%88%EC%8A%A4%ED%86%A0%EB%A6%AC+%EB%B6%84%EC%84%9D+%EC%8B%9C+%EC%88%99%EC%A7%80%ED%95%A0+%EC%82%AC%ED%95%AD%EB%93%A4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2023%2F01%2F16%2F%25EB%25B3%25BC%25EB%259D%25BC%25ED%258B%25B8%25EB%25A6%25AC%25ED%258B%25B0-%25EB%25AA%2585%25EB%25A0%25B9%25EC%2596%25B4%28shell%29-%25ED%259E%2588%25EC%258A%25A4%25ED%2586%25A0%25EB%25A6%25AC-%25EB%25B6%2584%25EC%2584%259D-%25EC%258B%259C-%25EC%2588%2599%25EC%25A7%2580%25ED%2595%25A0-%25EC%2582%25AC%25ED%2595%25AD%25EB%2593%25A4.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+      <a href="//www.pinterest.com/pin/create/button/?description=%EB%B3%BC%EB%9D%BC%ED%8B%B8%EB%A6%AC%ED%8B%B0+%EB%AA%85%EB%A0%B9%EC%96%B4%28shell%29+%ED%9E%88%EC%8A%A4%ED%86%A0%EB%A6%AC+%EB%B6%84%EC%84%9D+%EC%8B%9C+%EC%88%99%EC%A7%80%ED%95%A0+%EC%82%AC%ED%95%AD%EB%93%A4&url=https%3A%2F%2Fpragmob.github.io%2F%2Fforensic%2F2023%2F01%2F16%2F%25EB%25B3%25BC%25EB%259D%25BC%25ED%258B%25B8%25EB%25A6%25AC%25ED%258B%25B0-%25EB%25AA%2585%25EB%25A0%25B9%25EC%2596%25B4%28shell%29-%25ED%259E%2588%25EC%258A%25A4%25ED%2586%25A0%25EB%25A6%25AC-%25EB%25B6%2584%25EC%2584%259D-%25EC%258B%259C-%25EC%2588%2599%25EC%25A7%2580%25ED%2595%25A0-%25EC%2582%25AC%25ED%2595%25AD%25EB%2593%25A4.html&media=https://pragmob.github.io//assets/logo.jpg"
+        onclick="window.open(this.href, 'pinterest-share', 'width=550,height=255');return false;">
+        <i class="fa fa-pinterest-square fa-lg"></i>
+      </a>
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+      <a href="//www.reddit.com/submit" onclick="window.location = '//www.reddit.com/submit?url=' + encodeURIComponent('https://pragmob.github.io//forensic/2023/01/16/%EB%B3%BC%EB%9D%BC%ED%8B%B8%EB%A6%AC%ED%8B%B0-%EB%AA%85%EB%A0%B9%EC%96%B4(shell)-%ED%9E%88%EC%8A%A4%ED%86%A0%EB%A6%AC-%EB%B6%84%EC%84%9D-%EC%8B%9C-%EC%88%99%EC%A7%80%ED%95%A0-%EC%82%AC%ED%95%AD%EB%93%A4.html') + '&title=볼라틸리티 명령어(shell) 히스토리 분석 시 숙지할 사항들'; return false">
+        <i class="fa fa-reddit-square fa-lg"></i>
+      </a>
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+	<section class="post-navigation">
+		<span class="prev-post">
+			
+				<a href="/algebra/2022/12/31/%EC%88%98%EC%B2%B4%EA%B3%84%EC%9D%98-%ED%99%95%EC%9E%A5-%EA%B3%BC%EC%A0%95%EC%97%90-%EA%B4%80%ED%95%9C-%EB%8C%80%EC%88%98%EC%A0%81-%EC%9D%B4%ED%95%B4.html">
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i>
+					</span>
+					<span class="page-number">수체계의 확장 과정에 관한 대수적 이해</span>
+				</a>
+			
+		</span>
+		<span class="next-post">
+			
+				<a href="/ps/2023/02/06/%EB%B0%B1%EC%A4%80-%ED%8C%8C%EC%9D%B4%ED%94%84-%EC%98%AE%EA%B8%B0%EA%B8%B01(17070)-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html">
+					<span class="page-number">백준 파이프 옮기기1(17070) 문제풀이</span>
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-square fa-stack-2x"></i>
+						<i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i>
+					</span>
+				</a>
+			
+		</span>
+	</section>
+
+
+
+
+<!-- github comments -->
+<section class="github-comments">
+  <script src="https://utteranc.es/client.js"
+    repo="PragmoB/blog-comments"
+    issue-term="pathname"
+    theme="github-light"
+    crossorigin="anonymous"
+    async>
+  </script>
+</section>
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">플래그모의 리포지토리</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:peullaegeumo@gmail.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">peullaegeumo@gmail.com</span>
+          </a>
+        </li>
+
+        
+          
+        
+          
+        
+          
+          <li>
+            <a href="https://github.com/PragmoB" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">PragmoB</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text">공부하고 경험했던 내용들을 정리해서 올리고 있습니다. 어서오세요
+</p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>

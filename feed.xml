@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>플래그모의 리포지토리</title>
+    <description>공부하고 경험했던 내용들을 정리해서 올리고 있습니다. 어서오세요
+</description>
+    <link>https://pragmob.github.io//</link>
+    <atom:link href="https://pragmob.github.io//feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Wed, 18 Dec 2024 16:25:16 +0900</pubDate>
+    <lastBuildDate>Wed, 18 Dec 2024 16:25:16 +0900</lastBuildDate>
+    <generator>Jekyll v3.9.2</generator>
+    
+      <item>
+        <title>백준 9252 LCS 2 문제풀이</title>
+        <description>&lt;h1 id=&quot;개요&quot;&gt;개요&lt;/h1&gt; &lt;p&gt;3달전에 싸지방에서 풀었던 문제인데 복습 차 다시 풀어보니 풀이법, 구현방법 등이 바로바로 생각나지 않아 정리의 필요성을 느끼게 되었다.&lt;/p&gt; &lt;h1 id=&quot;문제이해&quot;&gt;문제이해&lt;/h1&gt; &lt;p&gt;LCS 계산이 목적인 문제이다.&lt;/p&gt; &lt;p&gt;여기서 LCS란 무엇이냐?&lt;/p&gt; &lt;blockquote&gt;...</description>
+        <pubDate>Wed, 18 Dec 2024 10:12:16 +0900</pubDate>
+        <link>https://pragmob.github.io//ps/2024/12/18/%EB%B0%B1%EC%A4%80-9252-LCS-2-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html</link>
+        <guid isPermaLink="true">https://pragmob.github.io//ps/2024/12/18/%EB%B0%B1%EC%A4%80-9252-LCS-2-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html</guid>
+        
+        
+        <category>PS</category>
+        
+      </item>
+    
+      <item>
+        <title>백준 파이프 옮기기1(17070) 문제풀이</title>
+        <description>&lt;h1 id=&quot;문제-이해&quot;&gt;문제 이해&lt;/h1&gt; &lt;p&gt;&lt;img src=&quot;/assets/posts/백준 파이프 옮기기1(17070) 문제풀이/문제상황.png&quot; alt=&quot;문제상황&quot; /&gt;&lt;/p&gt; &lt;p&gt;위와 같은 N*N (3 ≤ N ≤ 16) 크기의 격자판에서 왼쪽 위에 가로방향으로 누워있는 파이프를 밀어서 오른쪽 밑 끝까지 옮겨야...</description>
+        <pubDate>Mon, 06 Feb 2023 10:12:16 +0900</pubDate>
+        <link>https://pragmob.github.io//ps/2023/02/06/%EB%B0%B1%EC%A4%80-%ED%8C%8C%EC%9D%B4%ED%94%84-%EC%98%AE%EA%B8%B0%EA%B8%B01(17070)-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html</link>
+        <guid isPermaLink="true">https://pragmob.github.io//ps/2023/02/06/%EB%B0%B1%EC%A4%80-%ED%8C%8C%EC%9D%B4%ED%94%84-%EC%98%AE%EA%B8%B0%EA%B8%B01(17070)-%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4.html</guid>
+        
+        
+        <category>PS</category>
+        
+      </item>
+    
+      <item>
+        <title>볼라틸리티 명령어(shell) 히스토리 분석 시 숙지할 사항들</title>
+        <description>&lt;h1 id=&quot;cmdscan&quot;&gt;cmdscan&lt;/h1&gt; &lt;p&gt;입력되었던 명령어(쉘)의 흔적들을 메모리 덤프에서 찾아내 복구해주는 볼라틸리티의 플러그인이다&lt;/p&gt; &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;C:\Users\user\Documents\유틸\volatility-2.6.1&amp;gt;python vol.py -f Target1.vmss --profile=Win7SP1x86 cmdscan Volatility Foundation Volatility Framework 2.6.1 ************************************************** CommandProcess: conhost.exe Pid:...</description>
+        <pubDate>Mon, 16 Jan 2023 10:12:16 +0900</pubDate>
+        <link>https://pragmob.github.io//forensic/2023/01/16/%EB%B3%BC%EB%9D%BC%ED%8B%B8%EB%A6%AC%ED%8B%B0-%EB%AA%85%EB%A0%B9%EC%96%B4(shell)-%ED%9E%88%EC%8A%A4%ED%86%A0%EB%A6%AC-%EB%B6%84%EC%84%9D-%EC%8B%9C-%EC%88%99%EC%A7%80%ED%95%A0-%EC%82%AC%ED%95%AD%EB%93%A4.html</link>
+        <guid isPermaLink="true">https://pragmob.github.io//forensic/2023/01/16/%EB%B3%BC%EB%9D%BC%ED%8B%B8%EB%A6%AC%ED%8B%B0-%EB%AA%85%EB%A0%B9%EC%96%B4(shell)-%ED%9E%88%EC%8A%A4%ED%86%A0%EB%A6%AC-%EB%B6%84%EC%84%9D-%EC%8B%9C-%EC%88%99%EC%A7%80%ED%95%A0-%EC%82%AC%ED%95%AD%EB%93%A4.html</guid>
+        
+        
+        <category>forensic</category>
+        
+      </item>
+    
+      <item>
+        <title>수체계의 확장 과정에 관한 대수적 이해</title>
+        <description>&lt;h1 id=&quot;개인적으로-생각하는-수와-연산의-기원&quot;&gt;개인적으로 생각하는 수와 연산의 기원&lt;/h1&gt; &lt;p&gt;&lt;img src=&quot;/assets/posts/수체계의 확장 과정에 관한 대수적 이해/기원1.PNG&quot; alt=&quot;기원1&quot; /&gt;&lt;/p&gt; &lt;p&gt;모든 학문의 발전은 현실세계에서 발생하는 문제를 해결하기 위해 고민하면서부터 시작한다&lt;/p&gt; &lt;p&gt;&lt;img src=&quot;/assets/posts/수체계의 확장 과정에 관한...</description>
+        <pubDate>Sat, 31 Dec 2022 10:12:16 +0900</pubDate>
+        <link>https://pragmob.github.io//algebra/2022/12/31/%EC%88%98%EC%B2%B4%EA%B3%84%EC%9D%98-%ED%99%95%EC%9E%A5-%EA%B3%BC%EC%A0%95%EC%97%90-%EA%B4%80%ED%95%9C-%EB%8C%80%EC%88%98%EC%A0%81-%EC%9D%B4%ED%95%B4.html</link>
+        <guid isPermaLink="true">https://pragmob.github.io//algebra/2022/12/31/%EC%88%98%EC%B2%B4%EA%B3%84%EC%9D%98-%ED%99%95%EC%9E%A5-%EA%B3%BC%EC%A0%95%EC%97%90-%EA%B4%80%ED%95%9C-%EB%8C%80%EC%88%98%EC%A0%81-%EC%9D%B4%ED%95%B4.html</guid>
+        
+        
+        <category>algebra</category>
+        
+      </item>
+    
+      <item>
+        <title>윈도우 gui 서브시스템의 이해</title>
+        <description>&lt;h1 id=&quot;개요&quot;&gt;개요&lt;/h1&gt; &lt;p&gt;요즘에 읽고 있는 포렌식 책에서 윈도우의 gui 사용 흔적과 관련된 내용을 접했다&lt;/p&gt; &lt;p&gt;평소에 &lt;a href=&quot;https://www.youtube.com/watch?v=omj21BQouVI&quot;&gt;샌즈바이러스&lt;/a&gt; 같은거 만들면서 놀고 응용해서 원격 조종 툴도 만들어보고 윈도우 gui는 정말 잘 안다고...</description>
+        <pubDate>Sat, 10 Dec 2022 10:12:16 +0900</pubDate>
+        <link>https://pragmob.github.io//forensic/2022/12/10/%EC%9C%88%EB%8F%84%EC%9A%B0-gui-%EC%84%9C%EB%B8%8C%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%EC%9D%B4%ED%95%B4.html</link>
+        <guid isPermaLink="true">https://pragmob.github.io//forensic/2022/12/10/%EC%9C%88%EB%8F%84%EC%9A%B0-gui-%EC%84%9C%EB%B8%8C%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%98-%EC%9D%B4%ED%95%B4.html</guid>
+        
+        
+        <category>forensic</category>
+        
+      </item>
+    
+      <item>
+        <title>RSA 알고리즘 완벽 이해</title>
+        <description>&lt;h1 id=&quot;개요&quot;&gt;개요&lt;/h1&gt; &lt;p&gt;면접을 앞두고 암호학과 관련된 내용이 생기부에 기록되어있어 빈틈없는 이해를 위해 직접 정리해보고자 한다&lt;/p&gt; &lt;p&gt;사실 과정은 별거 없는데 증명부분이 이해가 안됐던 부분이 있어서 그렇다&lt;/p&gt; &lt;h1 id=&quot;키-생성&quot;&gt;키 생성&lt;/h1&gt; &lt;p&gt;두 소수...</description>
+        <pubDate>Tue, 18 Oct 2022 10:12:16 +0900</pubDate>
+        <link>https://pragmob.github.io//cryptography/2022/10/18/RSA-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%99%84%EB%B2%BD-%EC%9D%B4%ED%95%B4.html</link>
+        <guid isPermaLink="true">https://pragmob.github.io//cryptography/2022/10/18/RSA-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%99%84%EB%B2%BD-%EC%9D%B4%ED%95%B4.html</guid>
+        
+        
+        <category>cryptography</category>
+        
+      </item>
+    
+      <item>
+        <title>그림으로 쉽게 보는 tcache stashing unlink attack</title>
+        <description>&lt;h1 id=&quot;소개&quot;&gt;소개&lt;/h1&gt; &lt;p&gt;고3 진로 시간에 발표한 내용.&lt;/p&gt; &lt;p&gt;면접을 위해 복습하려고 찾아보니 잘 정리된 곳이 없어서 직접 정리해보려고 한다&lt;/p&gt; &lt;p&gt;여기저기 돌아다니며 공부하다보니 글로 설명하기 보다는 그림으로 보여주는게 더 이해가 쉬움을 깨달았다&lt;/p&gt;...</description>
+        <pubDate>Mon, 03 Oct 2022 10:12:16 +0900</pubDate>
+        <link>https://pragmob.github.io//system_hacking/2022/10/03/%EA%B7%B8%EB%A6%BC%EC%9C%BC%EB%A1%9C-%EC%89%BD%EA%B2%8C-%EB%B3%B4%EB%8A%94-tcache-stashing-unlink-attack.html</link>
+        <guid isPermaLink="true">https://pragmob.github.io//system_hacking/2022/10/03/%EA%B7%B8%EB%A6%BC%EC%9C%BC%EB%A1%9C-%EC%89%BD%EA%B2%8C-%EB%B3%B4%EB%8A%94-tcache-stashing-unlink-attack.html</guid>
+        
+        
+        <category>system_hacking</category>
+        
+      </item>
+    
+      <item>
+        <title>glibc 힙메모리 관리체계 정리</title>
+        <description>&lt;h1 id=&quot;소개&quot;&gt;소개&lt;/h1&gt; &lt;p&gt;힙메모리 취약점을 공부하기 앞서 필요한 내용.&lt;/p&gt; &lt;p&gt;내용이 복잡하고 처음 공부했을때 이해가 어려웠던 경험이 있어 직접 정리하고자 한다&lt;/p&gt; &lt;p&gt;힙메모리는 처음엔 Top Chunk라고 불리는 거대한 메모리 덩어리가 있다&lt;/p&gt; &lt;p&gt;여기서 malloc으로...</description>
+        <pubDate>Thu, 29 Sep 2022 10:12:16 +0900</pubDate>
+        <link>https://pragmob.github.io//system_hacking/2022/09/29/glibc-%ED%9E%99%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC%EC%B2%B4%EA%B3%84-%EC%A0%95%EB%A6%AC.html</link>
+        <guid isPermaLink="true">https://pragmob.github.io//system_hacking/2022/09/29/glibc-%ED%9E%99%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC%EC%B2%B4%EA%B3%84-%EC%A0%95%EB%A6%AC.html</guid>
+        
+        
+        <category>system_hacking</category>
+        
+      </item>
+    
+      <item>
+        <title>메모리 포렌식 1독 후 계획</title>
+        <description>&lt;h1 id=&quot;프로젝트&quot;&gt;프로젝트&lt;/h1&gt; &lt;ul&gt; &lt;li&gt;GrrCON CTF 풀이&lt;/li&gt; &lt;li&gt;루트킷 개발하기&lt;/li&gt; &lt;li&gt;내가 만든 악성코드 검출해보기&lt;/li&gt; &lt;li&gt;맘아이(자녀 보호 프로그램) 검출 및 크랙 방법 분석&lt;/li&gt; &lt;/ul&gt; &lt;h1 id=&quot;읽을-책&quot;&gt;읽을 책&lt;/h1&gt; &lt;ul&gt; &lt;li&gt;Windows Internals 최신판&lt;/li&gt; &lt;li&gt;Malware Analyst’s...</description>
+        <pubDate>Thu, 22 Sep 2022 11:12:16 +0900</pubDate>
+        <link>https://pragmob.github.io//forensic/2022/09/22/%EB%A9%94%EB%AA%A8%EB%A6%AC-%ED%8F%AC%EB%A0%8C%EC%8B%9D-1%EB%8F%85-%ED%9B%84-%EA%B3%84%ED%9A%8D.html</link>
+        <guid isPermaLink="true">https://pragmob.github.io//forensic/2022/09/22/%EB%A9%94%EB%AA%A8%EB%A6%AC-%ED%8F%AC%EB%A0%8C%EC%8B%9D-1%EB%8F%85-%ED%9B%84-%EA%B3%84%ED%9A%8D.html</guid>
+        
+        
+        <category>forensic</category>
+        
+      </item>
+    
+      <item>
+        <title>(포렌식)소켓의 실체는 무엇인가?</title>
+        <description>&lt;h1 id=&quot;배경지식&quot;&gt;배경지식&lt;/h1&gt; &lt;p&gt;콘솔 프로그램이 실행될때 프로그램 내부에선 입력을 받는 입력버퍼의 핸들과 출력을 내는 출력버퍼의 핸들, 오류메시지를 내는 버퍼의 핸들을 가지고 있다&lt;/p&gt; &lt;p&gt;즉 printf로 문자열을 출력한다는건 곧 출력버퍼의 핸들을 통해 출력버퍼에...</description>
+        <pubDate>Tue, 20 Sep 2022 11:08:16 +0900</pubDate>
+        <link>https://pragmob.github.io//forensic/2022/09/20/(%ED%8F%AC%EB%A0%8C%EC%8B%9D)%EC%86%8C%EC%BC%93%EC%9D%98-%EC%8B%A4%EC%B2%B4%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80.html</link>
+        <guid isPermaLink="true">https://pragmob.github.io//forensic/2022/09/20/(%ED%8F%AC%EB%A0%8C%EC%8B%9D)%EC%86%8C%EC%BC%93%EC%9D%98-%EC%8B%A4%EC%B2%B4%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80.html</guid>
+        
+        
+        <category>forensic</category>
+        
+      </item>
+    
+  </channel>
+</rss>
